@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { CommnetoAuthProvider, CommentsPage } from 'commento-react-material-ui'
-import 'commento-react/dist/commento-style.css'
+import 'commento-react-material-ui/dist/commento-style.css'
 
 const dummyAuthToken = process.env.REACT_APP_AUTH_TOKEN
 console.log(dummyAuthToken)
@@ -15,7 +15,7 @@ const App = () => {
       >
         <CommentsPage
           pageId={
-            'your-awesome-commento-pageid'
+            'your-awesome-page-id'
           }
           pageType={'popup'}
           height={600}
