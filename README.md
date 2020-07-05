@@ -4,8 +4,6 @@
 
 ### **Future Releases**: The plan is to make this package work cohesively with a regular commento installtion as described on Commento.io
 
-### **Future Releases**: The plan is to make this package work cohesively with a regular commento installtion as described on Commento.io
-
 ### This package has been derived from [![NPM](https://img.shields.io/npm/v/commento-react.svg)](https://www.npmjs.com/package/commento-react) COMMENTO-REACT npm package.
 
 ### Your project must use material-ui to use this as a dependency.
