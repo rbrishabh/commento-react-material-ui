@@ -38,7 +38,7 @@ const App = () => {
         commentoOrigin={process.env.REACT_APP_COMMENTO_ORIGIN as string}
         ssoToken={dummyAuthToken}
       >
-        <CommentsPage pageId='pageID' />
+        <CommentsPage pageId='your-awesome-commento-pageid' />
       </CommnetoAuthProvider>
     </div>
   )
