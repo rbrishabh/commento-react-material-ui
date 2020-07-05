@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { CommnetoAuthProvider, CommentsPage } from 'commento-react'
+import { CommnetoAuthProvider, CommentsPage } from 'commento-react-material-ui'
 import 'commento-react/dist/commento-style.css'
 
 const dummyAuthToken = process.env.REACT_APP_AUTH_TOKEN

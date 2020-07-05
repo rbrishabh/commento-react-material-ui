@@ -4,7 +4,7 @@
   "description": "A react based frontend for Commento baked with material-ui",
   "author": "rbrishabh",
   "license": "MIT",
-  "repository": "rbrishabh/commento-react",
+  "repository": "rbrishabh/commento-react-material-ui",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.tsx",

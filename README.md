@@ -1,4 +1,4 @@
-# commento-react
+# commento-react-material-ui
 
 ### **Warning** ⚠ : This package is not ready to be used in production, also the current layout of the application is synchronized for a special internal usecase. Hence, it won't work with a regular commento installation.
 
@@ -17,7 +17,7 @@
 ## Install
 
 ```bash
-npm install --save commento-react
+npm i commento-react-material-ui
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ npm install --save commento-react
 ```tsx
 import React from 'react'
 
-import { CommnetoAuthProvider, CommentsPage } from 'commento-react'
+import { CommnetoAuthProvider, CommentsPage } from 'commento-react-material-ui'
 import 'commento-react/dist/commento-style.css'
 const dummyAuthToken = process.env.REACT_APP_AUTH_TOKEN
 
