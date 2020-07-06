@@ -28,7 +28,8 @@ interface CommentPageProps {
 }
 
 const generateClassName = createGenerateClassName({
-  disableGlobal: true
+  disableGlobal: true,
+  productionPrefix: 'commento'
 })
 
 const convertArrayToKeyValuePairs = (comments: CommentDetails[]) => {
