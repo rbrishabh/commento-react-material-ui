@@ -1,12 +1,12 @@
 .comments-page {
   max-width: 1060px;
   margin: auto;
-  font-family: Poppins;
+  font-family: 'Proxima Nova';
 }
 
 .comments-page-pop {
   max-width: 1060px;
-  font-family: Poppins;
+  font-family: 'Proxima Nova' ;
 }
 
 .comments-page * {
@@ -65,11 +65,10 @@
   font-style: normal;
   font-weight: normal;
   font-size: 13px;
-  line-height: 18px;  
-  
+  line-height: 18px;
 }
 .commentPopupBody:hover {
-  background: #F8F9FD;
+  background: #f8f9fd;
 }
 .dividerMargin:not(:first-child) {
   margin-bottom: 10px !important;
@@ -87,7 +86,7 @@
 }
 
 .sendIcon {
-  color: #191A1E !important;
+  color: #191a1e !important;
 }
 .commentslist-wrapper {
   /* padding: 1rem 0; */
@@ -117,7 +116,7 @@
   margin-right: 1px;
   background: none !important;
   box-shadow: none !important;
-  color: #ADB5BD !important;
+  color: #adb5bd !important;
   right: -10px !important;
 }
 
@@ -156,7 +155,7 @@
   vertical-align: middle;
 }
 .formControlOutline {
- border: none !important;
+  border: none !important;
 }
 
 .userdetails {
@@ -196,7 +195,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Poppins';
+  font-family: 'Proxima Nova';
   border-radius: 0.6rem;
 }
 
