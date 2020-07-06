@@ -41,7 +41,7 @@ export const EditComment: React.FC<EditCommentProps> = ({
         style={{ marginTop: '1rem' }}
       />
       <button onClick={handleSubmit} className='commento-button'>
-        submit
+        Submit
       </button>
     </div>
   )

@@ -23,14 +23,16 @@ const GridComments: React.FC<CommentPageProps> = ({
   commentsLoaded,
   commentSystem
 }) => {
+  commentValues = commentValues.reverse()
+  console.log(userDetails)
   return (
     <div className='comments-page'>
-      <div className='commentHeader userdetails'>
+      {/* <div className='commentHeader userdetails'>
         <img src={userDetails.photo} alt='User Image' className='avatar' />
         <div className='commentHeader_content'>
           <p className='username'>{userDetails.name}</p>
         </div>
-      </div>
+      </div> */}
       {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
         <AddNewCommnet pageType={pageType} pageId={pageId} />
       )}
@@ -46,12 +48,12 @@ const GridComments: React.FC<CommentPageProps> = ({
           ))}
         </div>
       ) : (
-        <div style={{ marginTop: '1rem' }}>
-          <div className='commento-alert'>
-            Loading the comment stream{' '}
-            <img src={LoadingGif} className='loading-gif' />
-          </div>
-        </div>
+        // <div style={{ marginTop: '1rem' }}>
+        //   <div className='commento-alert'>
+        //     Loading the comment stream{' '}
+        <img src={LoadingGif} className='loading-gif' />
+        //   </div>
+        // </div>
       )}
     </div>
   )

@@ -119,7 +119,7 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
 
   return (
     <div className='commentActions'>
-      {pageType !== 'popup' ? (
+      {pageType === 'disable' ? (
         !isOwnComment ? (
           <React.Fragment>
             {' '}
@@ -139,7 +139,8 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
       ) : (
         ''
       )}
-      {pageType === 'popup' ? (
+      {/* // pageType !== 'popup' ? ( */}
+      {
         !isOwnComment ? (
           <React.Fragment>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -199,59 +200,63 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
         ) : (
           ''
         )
-      ) : (
-        ''
-      )}
+        // ) : (
+        //   ''
+        // )
+      }
       {isOwnComment ? (
-        pageType !== 'popup' ? (
-          <React.Fragment>
-            <button onClick={onEditClick} className='commento-button'>
-              Edit
-            </button>
-            <button onClick={handleDeleteComment} className='commento-button'>
-              Delete
-            </button>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <Button
-              aria-controls='customized-menu'
-              aria-haspopup='true'
-              variant='contained'
-              className='commentSettingsClass'
-              onClick={handleClickSettings}
+        // (
+        // pageType !== 'popup' ? (
+        //   <React.Fragment>
+        //     <button onClick={onEditClick} className='commento-button'>
+        //       Edit
+        //     </button>
+        //     <button onClick={handleDeleteComment} className='commento-button'>
+        //       Delete
+        //     </button>
+        //   </React.Fragment>
+        // )
+        // :
+
+        <React.Fragment>
+          <Button
+            aria-controls='customized-menu'
+            aria-haspopup='true'
+            variant='contained'
+            className='commentSettingsClass'
+            onClick={handleClickSettings}
+          >
+            <MoreVertIcon color='inherit' />
+          </Button>
+          <StyledMenu
+            style={{ zIndex: 100000000 }}
+            anchorEl={anchorElSettings}
+            keepMounted
+            open={Boolean(anchorElSettings)}
+            onClose={handleCloseSettings}
+          >
+            <StyledMenuItem
+              onClick={() => [handleCloseSettings(), onEditClick()]}
+              key='1'
             >
-              <MoreVertIcon color='inherit' />
-            </Button>
-            <StyledMenu
-              style={{ zIndex: 100000000 }}
-              anchorEl={anchorElSettings}
-              keepMounted
-              open={Boolean(anchorElSettings)}
-              onClose={handleCloseSettings}
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              <ListItemText primary='Edit' />
+            </StyledMenuItem>
+            <StyledMenuItem
+              onClick={() => [handleCloseSettings(), handleDeleteComment()]}
+              key='2'
             >
-              <StyledMenuItem
-                onClick={() => [handleCloseSettings(), onEditClick()]}
-                key='1'
-              >
-                <ListItemIcon>
-                  <EditIcon />
-                </ListItemIcon>
-                <ListItemText primary='Edit' />
-              </StyledMenuItem>
-              <StyledMenuItem
-                onClick={() => [handleCloseSettings(), handleDeleteComment()]}
-                key='2'
-              >
-                <ListItemIcon>
-                  <DeleteFilledIcon />
-                </ListItemIcon>
-                <ListItemText primary='Delete' />
-              </StyledMenuItem>
-            </StyledMenu>
-          </React.Fragment>
-        )
+              <ListItemIcon>
+                <DeleteFilledIcon />
+              </ListItemIcon>
+              <ListItemText primary='Delete' />
+            </StyledMenuItem>
+          </StyledMenu>
+        </React.Fragment>
       ) : (
+        // )
         ''
       )}
       {/* {commentSystem !== 'personal' ? (

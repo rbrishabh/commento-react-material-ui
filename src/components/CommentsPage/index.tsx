@@ -122,12 +122,12 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
     return pageType === 'popup' ? (
       <img src={LoadingGif} className='loading-gif' />
     ) : (
-      <div className='comments-page'>
-        <div className='commento-alert'>
-          Authenticating the user{' '}
-          <img src={LoadingGif} className='loading-gif' />
-        </div>
-      </div>
+      // <div className='comments-page'>
+      //   <div className='commento-alert'>
+      //     Authenticating the user{' '}
+      <img src={LoadingGif} className='loading-gif' />
+      // </div>
+      // </div>
     )
   } else if (!isAuthenticated && !isAuthenticating) {
     return (
@@ -149,18 +149,18 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
         commentDispatch
       }}
     >
-      {pageType === 'grid' ? (
-        <GridComments
-          commentValues={commentValues}
-          userDetails={userDetails}
-          pageId={pageId}
-          allowOnlyOneRootComment={allowOnlyOneRootComment}
-          commentsLoaded={commentsLoaded}
-          pageType={pageType}
-          commentSystem={commentSystem}
-        />
-      ) : pageType === 'popup' ? (
-        <StylesProvider generateClassName={generateClassName}>
+      <StylesProvider generateClassName={generateClassName}>
+        {pageType === 'grid' ? (
+          <GridComments
+            commentValues={commentValues}
+            userDetails={userDetails}
+            pageId={pageId}
+            allowOnlyOneRootComment={allowOnlyOneRootComment}
+            commentsLoaded={commentsLoaded}
+            pageType={pageType}
+            commentSystem={commentSystem}
+          />
+        ) : pageType === 'popup' ? (
           <PopupComments
             commentSystem={commentSystem}
             height={height}
@@ -172,10 +172,10 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
             commentsLoaded={commentsLoaded}
             pageType={pageType}
           />
-        </StylesProvider>
-      ) : (
-        ''
-      )}
+        ) : (
+          ''
+        )}
+      </StylesProvider>
     </CommentPageContext.Provider>
   )
 }

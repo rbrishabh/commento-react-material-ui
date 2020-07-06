@@ -61,16 +61,26 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
     setCommentBody(newCommentBody)
   }
   return pageType === 'grid' ? (
-    <div className='edit-comment-box'>
-      <textarea
-        value={commentBody}
-        onChange={handleCommentBodyChange}
-        placeholder='Add a new comment'
-      />
-      <button onClick={handleSubmit} className='commento-button'>
-        Submit
-      </button>
-    </div>
+    <OutlinedInput
+      fullWidth
+      onChange={handleCommentBodyChange}
+      value={commentBody}
+      style={{
+        width: '95%',
+        marginBottom: '10px',
+        marginLeft: '2%',
+        borderRadius: '1rem 1rem 1rem 1rem'
+      }}
+      className='popup-comment-padding'
+      placeholder='Add a comment'
+      endAdornment={
+        <InputAdornment position='end'>
+          <IconButton className='sendIcon' onClick={handleSubmit}>
+            <SendIcon color='inherit' />
+          </IconButton>
+        </InputAdornment>
+      }
+    />
   ) : pageType === 'popup' ? (
     <OutlinedInput
       fullWidth
@@ -94,15 +104,26 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
       }
     />
   ) : (
-    <div className='edit-comment-box'>
-      <textarea
-        value={commentBody}
-        onChange={handleCommentBodyChange}
-        placeholder='Add a new comment'
-      />
-      <button onClick={handleSubmit} className='commento-button'>
-        Submit
-      </button>
-    </div>
+    <OutlinedInput
+      fullWidth
+      onChange={handleCommentBodyChange}
+      value={commentBody}
+      style={{
+        marginTop: !commentsLoaded ? '500px' : '0px',
+        width: '95%',
+        marginBottom: '10px',
+        marginLeft: '2%',
+        borderRadius: '1rem 1rem 1rem 1rem'
+      }}
+      className='popup-comment-padding'
+      placeholder='Add a comment'
+      endAdornment={
+        <InputAdornment position='end'>
+          <IconButton className='sendIcon' onClick={handleSubmit}>
+            <SendIcon color='inherit' />
+          </IconButton>
+        </InputAdornment>
+      }
+    />
   )
 }

@@ -49,7 +49,10 @@ export const Comment: React.FC<CommentProps> = ({
         CommentSortTypes.desc,
         Object.values(commentDetails.replies)
       )
-    if (pageType === 'popup' && Array.isArray(replies)) {
+    if (
+      // pageType === 'popup' &&
+      Array.isArray(replies)
+    ) {
       replies = (replies as CommentDetails[]).reverse()
     }
 
@@ -71,7 +74,9 @@ export const Comment: React.FC<CommentProps> = ({
       <div
         className={pageType === 'popup' ? 'commentPopupBody' : 'commentBody'}
       >
-        {pageType === 'popup' ? <Divider className='dividerMargin' /> : ''}
+        {/* {pageType === 'popup' ?  */}
+        <Divider className='dividerMargin' />
+        {/* : ''} */}
         <CommentHeader
           commentSystem={commentSystem}
           userData={
@@ -109,6 +114,7 @@ export const Comment: React.FC<CommentProps> = ({
         <div className='repliesContianer'>
           <AddNewCommnet
             pageId={pageId}
+            pageType='grid'
             parentHex={commentDetails.commentHex}
             onSuccess={handleReplyClick}
           />
