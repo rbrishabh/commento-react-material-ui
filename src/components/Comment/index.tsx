@@ -16,12 +16,14 @@ interface CommentProps {
   commentDetails: CommentDetails
   pageType?: string
   commentSystem?: string
+  isReply?: boolean
 }
 
 export const Comment: React.FC<CommentProps> = ({
   commentDetails,
   pageType = 'grid',
-  commentSystem
+  commentSystem,
+  isReply = false
 }) => {
   const {
     pageId,
@@ -30,6 +32,7 @@ export const Comment: React.FC<CommentProps> = ({
   } = useCommentPageContext()
 
   const [editModeOpen, setEditModeOpen] = useState<boolean>(false)
+  const [isHovered, setIsHovered] = useState<boolean>(false)
   const [replyMode, setReplyMode] = useState<boolean>(false)
   const [collapseChildren, setCollapseChildren] = useState<boolean>(false)
   const isOwnComment = useMemo<boolean>(() => {
@@ -93,24 +96,34 @@ export const Comment: React.FC<CommentProps> = ({
           />
         ) : (
           <div
-            className={
-              pageType === 'popup' ? 'commentContainerPop' : 'commentContainer'
-            }
-            dangerouslySetInnerHTML={{ __html: commentDetails.html }}
-          />
+            className='commentActionBody'
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <div
+              className={
+                pageType === 'popup'
+                  ? 'commentContainerPop'
+                  : 'commentContainer'
+              }
+              dangerouslySetInnerHTML={{ __html: commentDetails.html }}
+            />
+            <CommentActions
+              commentHex={commentDetails.commentHex}
+              isHovered={isHovered}
+              onEditClick={handleOnEditClick}
+              onCollapseClick={handleOnCollapseClick}
+              pageType={pageType}
+              commentSystem={commentSystem}
+              isReply={isReply}
+              isOwnComment={isOwnComment}
+              onReplyClick={handleReplyClick}
+              repliesCollapsed={collapseChildren}
+            />
+          </div>
         )}
-        <CommentActions
-          commentHex={commentDetails.commentHex}
-          onEditClick={handleOnEditClick}
-          onCollapseClick={handleOnCollapseClick}
-          pageType={pageType}
-          commentSystem={commentSystem}
-          isOwnComment={isOwnComment}
-          onReplyClick={handleReplyClick}
-          repliesCollapsed={collapseChildren}
-        />
       </div>
-      {replyMode && (
+      {replyMode && !isReply && (
         <div className='repliesContianer'>
           <AddNewCommnet
             pageId={pageId}
@@ -130,6 +143,7 @@ export const Comment: React.FC<CommentProps> = ({
           {(replies as CommentDetails[]).map((reply: CommentDetails) => (
             <Comment
               key={reply.commentHex}
+              isReply
               commentSystem={commentSystem}
               pageType={pageType}
               commentDetails={reply}

@@ -66,12 +66,11 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
       onChange={handleCommentBodyChange}
       value={commentBody}
       style={{
-        width: '95%',
+        width: '100%',
         marginBottom: '10px',
-        marginLeft: '2%',
         borderRadius: '1rem 1rem 1rem 1rem'
       }}
-      className='popup-comment-padding'
+      className=''
       placeholder='Add a comment'
       endAdornment={
         <InputAdornment position='end'>
@@ -93,7 +92,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         marginLeft: '2%',
         borderRadius: '1rem 1rem 1rem 1rem'
       }}
-      className='popup-comment-padding'
+      className='comment-padding'
       placeholder='Add a comment'
       endAdornment={
         <InputAdornment position='end'>

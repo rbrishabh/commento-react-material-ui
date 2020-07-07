@@ -13,7 +13,15 @@ const App = () => {
         commentoOrigin={process.env.REACT_APP_COMMENTO_ORIGIN as string}
         ssoToken={dummyAuthToken}
       >
-        <CommentsPage pageId={'2MsuNQY7Cav9mXRmVynY0d-[mag-f4767kbj7mmy2-collection]-collection'} allowOnlyOneRootComment={true} />
+        <CommentsPage
+          pageId={
+            'your-awesome-page-id'
+          }
+          pageType={'popup'}
+          height={750}
+          width={400}
+          commentSystem={'team'}
+        />
       </CommnetoAuthProvider>
     </div>
   )

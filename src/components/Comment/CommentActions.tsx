@@ -27,6 +27,8 @@ interface CommentActionsProps {
   repliesCollapsed: boolean
   pageType?: string
   commentSystem?: string
+  isHovered?: boolean
+  isReply?: boolean
 }
 
 export const CommentActions: React.FC<CommentActionsProps> = ({
@@ -37,10 +39,12 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
   onReplyClick,
   repliesCollapsed,
   pageType,
-  commentSystem
+  commentSystem,
+  isHovered,
+  isReply
 }) => {
   const { commentDispatch } = useCommentPageContext()
-  console.log(onCollapseClick, repliesCollapsed, commentSystem)
+  console.log(onCollapseClick, repliesCollapsed, commentSystem, pageType)
 
   const StyledMenu = withStyles({
     paper: {
@@ -86,16 +90,16 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
     })
   }, [commentHex])
 
-  const downvoteComment = useCallback(async () => {
-    handleCloseSettings()
-    await voteComment(-1, commentHex)
-    commentDispatch({
-      type: CommentPageActions.DOWNVOTE_COMMENT,
-      payload: {
-        commentHex: commentHex
-      }
-    })
-  }, [commentHex])
+  // const downvoteComment = useCallback(async () => {
+  //   handleCloseSettings()
+  //   await voteComment(-1, commentHex)
+  //   commentDispatch({
+  //     type: CommentPageActions.DOWNVOTE_COMMENT,
+  //     payload: {
+  //       commentHex: commentHex
+  //     }
+  //   })
+  // }, [commentHex])
 
   const handleDeleteComment = useCallback(async () => {
     handleCloseSettings()
@@ -119,81 +123,42 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
 
   return (
     <div className='commentActions'>
-      {pageType === 'disable' ? (
-        !isOwnComment ? (
-          <React.Fragment>
-            {' '}
-            <button onClick={onReplyClick} className='commento-button'>
-              Reply
-            </button>
-            <button onClick={upvoteComment} className='commento-button'>
-              Upvote
-            </button>
-            <button onClick={downvoteComment} className='commento-button'>
-              Downvote
-            </button>
-          </React.Fragment>
-        ) : (
-          ''
-        )
-      ) : (
-        ''
-      )}
-      {/* // pageType !== 'popup' ? ( */}
       {
         !isOwnComment ? (
           <React.Fragment>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Button
-                aria-controls='customized-menu'
-                aria-haspopup='true'
-                variant='contained'
-                className='commentSettingsClass'
-                onClick={handleClickSettings}
-              >
-                <MoreVertIcon color='inherit' />
-              </Button>
-              <StyledMenu
-                style={{ zIndex: 100000000 }}
-                anchorEl={anchorElSettings}
-                keepMounted
-                open={Boolean(anchorElSettings)}
-                onClose={handleCloseSettings}
-              >
-                {/* <StyledMenuItem onClick={upvoteComment} key='1'>
-                <ListItemText primary='Upvote' />
-              </StyledMenuItem>
-              <StyledMenuItem onClick={downvoteComment} key='2'>
-                <ListItemText primary='Downvote' />
-              </StyledMenuItem> */}
-                <StyledMenuItem
-                  onClick={() => [handleCloseSettings(), onReplyClick()]}
-                  key='2'
-                >
-                  <ListItemIcon>
-                    <ReplyIcon />
-                  </ListItemIcon>
-                  <ListItemText primary='Reply' />
-                </StyledMenuItem>
-                {/* <StyledMenuItem
-                onClick={() => [handleCloseSettings(), onCollapseClick()]}
-                key='6'
-              >
-                <ListItemText
-                  primary={
-                    repliesCollapsed ? 'Expand Replies' : 'Collapse Replies'
-                  }
-                />
-              </StyledMenuItem> */}
-              </StyledMenu>{' '}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginRight: '30px'
+              }}
+            >
               <div style={{ display: 'flex', color: 'grey' }}>
-                <Button style={{ color: 'grey' }} onClick={upvoteComment}>
-                  <ThumbUpAltIcon color='inherit' /> Like
-                </Button>
-                <Button style={{ color: 'grey' }} onClick={onReplyClick}>
-                  <ReplyIcon color='inherit' />
-                  Reply
-                </Button>
+                {isHovered ? (
+                  <React.Fragment>
+                    <Button
+                      style={{ color: 'grey' }}
+                      size='small'
+                      onClick={upvoteComment}
+                    >
+                      <ThumbUpAltIcon color='inherit' /> Like
+                    </Button>
+                    {!isReply ? (
+                      <Button
+                        style={{ color: 'grey' }}
+                        size='small'
+                        onClick={onReplyClick}
+                      >
+                        <ReplyIcon color='inherit' />
+                        Reply
+                      </Button>
+                    ) : (
+                      ''
+                    )}
+                  </React.Fragment>
+                ) : (
+                  ''
+                )}
               </div>
             </div>
           </React.Fragment>
@@ -205,19 +170,6 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
         // )
       }
       {isOwnComment ? (
-        // (
-        // pageType !== 'popup' ? (
-        //   <React.Fragment>
-        //     <button onClick={onEditClick} className='commento-button'>
-        //       Edit
-        //     </button>
-        //     <button onClick={handleDeleteComment} className='commento-button'>
-        //       Delete
-        //     </button>
-        //   </React.Fragment>
-        // )
-        // :
-
         <React.Fragment>
           <Button
             aria-controls='customized-menu'
@@ -259,17 +211,6 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
         // )
         ''
       )}
-      {/* {commentSystem !== 'personal' ? (
-        pageType !== 'popup' ? (
-          <button onClick={onCollapseClick} className='commento-button'>
-            {repliesCollapsed ? 'Expand Replies' : 'Collapse Replies'}
-          </button>
-        ) : (
-          ''
-        )
-      ) : (
-        ''
-      )} */}
     </div>
   )
 }
