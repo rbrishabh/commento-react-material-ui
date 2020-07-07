@@ -79,7 +79,8 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         style={{
           width: '100%',
           marginBottom: '10px',
-          borderRadius: '1rem 1rem 1rem 1rem'
+          borderRadius: '1rem 1rem 1rem 1rem',
+          backgroundColor: 'white'
         }}
         className=''
         placeholder='Add a comment'
@@ -102,7 +103,8 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         width: '95%',
         marginBottom: '10px',
         marginLeft: '2%',
-        borderRadius: '1rem 1rem 1rem 1rem'
+        borderRadius: '1rem 1rem 1rem 1rem',
+        backgroundColor: 'white'
       }}
       className='comment-padding'
       placeholder='Add a comment'
@@ -131,7 +133,8 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
           width: '95%',
           marginBottom: '10px',
           marginLeft: '2%',
-          borderRadius: '1rem 1rem 1rem 1rem'
+          borderRadius: '1rem 1rem 1rem 1rem',
+          backgroundColor: 'white'
         }}
         className='popup-comment-padding'
         placeholder='Add a comment'
