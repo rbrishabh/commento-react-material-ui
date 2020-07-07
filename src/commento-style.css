@@ -80,14 +80,14 @@
 
 .commentContainer {
   /* padding-top: 0.7rem; */
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 
 }
 .commentContainerPop {
   /* padding-top: 0.7rem; */
   margin-left: 1rem;
   margin-right: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 
 }
 
@@ -117,10 +117,10 @@
   cursor: pointer;
 }
 
-.commentActionBody {
+/* .commentActionBody {
   display: flex;
   justify-content: space-between;
-}
+} */
 .commentSettingsClass {
   justify-content: flex-end !important;
   margin-right: 1px;

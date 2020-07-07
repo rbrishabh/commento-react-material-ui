@@ -96,7 +96,11 @@ export const Comment: React.FC<CommentProps> = ({
           />
         ) : (
           <div
-            className='commentActionBody'
+            // className='commentActionBody'
+            style={{
+              display: pageType === 'popup' ? 'flex' : '',
+              justifyContent: pageType === 'popup' ? 'space-between' : ''
+            }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >

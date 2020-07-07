@@ -131,7 +131,7 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 marginRight: pageType === 'popup' ? '10px' : '30px',
-                marginTop: pageType === 'popup' ? '10px' : '30px'
+                // marginTop: pageType === 'popup' ? '10px' : '30px'
               }}
             >
               <div style={{ display: 'flex', color: 'grey' }}>
