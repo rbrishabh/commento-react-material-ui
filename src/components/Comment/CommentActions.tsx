@@ -130,7 +130,8 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                marginRight: '30px'
+                marginRight: pageType === 'popup' ? '10px' : '30px',
+                marginTop: pageType === 'popup' ? '10px' : '30px'
               }}
             >
               <div style={{ display: 'flex', color: 'grey' }}>
@@ -141,7 +142,7 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
                       size='small'
                       onClick={upvoteComment}
                     >
-                      <ThumbUpAltIcon color='inherit' /> Like
+                      <ThumbUpAltIcon fontSize='small' color='inherit' /> Like
                     </Button>
                     {!isReply ? (
                       <Button
@@ -149,7 +150,7 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
                         size='small'
                         onClick={onReplyClick}
                       >
-                        <ReplyIcon color='inherit' />
+                        <ReplyIcon fontSize='small' color='inherit' />
                         Reply
                       </Button>
                     ) : (

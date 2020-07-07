@@ -15,7 +15,7 @@ const App = () => {
       >
         <CommentsPage
           pageId={
-            'your-awesome-page-id'
+            '2qwheYL25ctjDFrdEqr3Kg-[1e3daaa8-1c6b-4759-9694-25ad20902d13]-organization'
           }
           pageType={'popup'}
           height={750}
