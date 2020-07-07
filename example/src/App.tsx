@@ -15,12 +15,13 @@ const App = () => {
       >
         <CommentsPage
           pageId={
-            '2qwheYL25ctjDFrdEqr3Kg-[1e3daaa8-1c6b-4759-9694-25ad20902d13]-organization'
+            '1kQyBommouqmxS1RJHVMVi-[per-kb57kai28due-collection]-collection'
           }
-          pageType={'popup'}
-          height={750}
-          width={400}
-          commentSystem={'team'}
+          allowOnlyOneRootComment
+          // pageType={'popup'}
+          // height={750}
+          // width={400}
+          // commentSystem={'team'}
         />
       </CommnetoAuthProvider>
     </div>

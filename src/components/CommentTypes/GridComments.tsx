@@ -34,7 +34,11 @@ const GridComments: React.FC<CommentPageProps> = ({
         </div>
       </div> */}
       {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
-        <AddNewCommnet pageType={pageType} pageId={pageId} />
+        <AddNewCommnet
+          pageType={pageType}
+          pageId={pageId}
+          userData={userDetails}
+        />
       )}
 
       {commentsLoaded ? (

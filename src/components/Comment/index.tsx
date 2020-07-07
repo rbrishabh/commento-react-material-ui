@@ -134,6 +134,11 @@ export const Comment: React.FC<CommentProps> = ({
             pageType='grid'
             parentHex={commentDetails.commentHex}
             onSuccess={handleReplyClick}
+            userData={
+              isOwnComment
+                ? currentCommenterDetails
+                : commenters[commentDetails.commenterHex]
+            }
           />
         </div>
       )}

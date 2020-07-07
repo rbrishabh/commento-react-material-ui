@@ -16,6 +16,7 @@ interface AddNewCommentProps {
   onSuccess?: () => void
   scrollToBottom?: () => void
   commentsLoaded?: any
+  userData?: any
 }
 
 export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
@@ -24,8 +25,10 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
   pageType,
   onSuccess,
   scrollToBottom,
-  commentsLoaded
+  commentsLoaded,
+  userData
 }) => {
+  console.log(userData)
   const [commentBody, setCommentBody] = useState<string>('')
   const { commentDispatch, currentCommenterDetails } = useCommentPageContext()
   const handleSubmit = useCallback(async () => {
@@ -61,25 +64,34 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
     setCommentBody(newCommentBody)
   }
   return pageType === 'grid' ? (
-    <OutlinedInput
-      fullWidth
-      onChange={handleCommentBodyChange}
-      value={commentBody}
-      style={{
-        width: '100%',
-        marginBottom: '10px',
-        borderRadius: '1rem 1rem 1rem 1rem'
-      }}
-      className=''
-      placeholder='Add a comment'
-      endAdornment={
-        <InputAdornment position='end'>
-          <IconButton className='sendIcon' onClick={handleSubmit}>
-            <SendIcon color='inherit' />
-          </IconButton>
-        </InputAdornment>
-      }
-    />
+    <div style={{ display: 'flex' }}>
+      <img
+        style={{ margin: '10px 5px' }}
+        src={userData.photo}
+        alt='User Image'
+        className='avatar'
+      />
+
+      <OutlinedInput
+        fullWidth
+        onChange={handleCommentBodyChange}
+        value={commentBody}
+        style={{
+          width: '100%',
+          marginBottom: '10px',
+          borderRadius: '1rem 1rem 1rem 1rem'
+        }}
+        className=''
+        placeholder='Add a comment'
+        endAdornment={
+          <InputAdornment position='end'>
+            <IconButton className='sendIcon' onClick={handleSubmit}>
+              <SendIcon color='inherit' />
+            </IconButton>
+          </InputAdornment>
+        }
+      />
+    </div>
   ) : pageType === 'popup' ? (
     <OutlinedInput
       fullWidth
@@ -103,26 +115,34 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
       }
     />
   ) : (
-    <OutlinedInput
-      fullWidth
-      onChange={handleCommentBodyChange}
-      value={commentBody}
-      style={{
-        marginTop: !commentsLoaded ? '500px' : '0px',
-        width: '95%',
-        marginBottom: '10px',
-        marginLeft: '2%',
-        borderRadius: '1rem 1rem 1rem 1rem'
-      }}
-      className='popup-comment-padding'
-      placeholder='Add a comment'
-      endAdornment={
-        <InputAdornment position='end'>
-          <IconButton className='sendIcon' onClick={handleSubmit}>
-            <SendIcon color='inherit' />
-          </IconButton>
-        </InputAdornment>
-      }
-    />
+    <div style={{ display: 'flex' }}>
+      <img
+        style={{ margin: '10px 5px' }}
+        src={userData.photo}
+        alt='User Image'
+        className='avatar'
+      />
+      <OutlinedInput
+        fullWidth
+        onChange={handleCommentBodyChange}
+        value={commentBody}
+        style={{
+          marginTop: !commentsLoaded ? '500px' : '0px',
+          width: '95%',
+          marginBottom: '10px',
+          marginLeft: '2%',
+          borderRadius: '1rem 1rem 1rem 1rem'
+        }}
+        className='popup-comment-padding'
+        placeholder='Add a comment'
+        endAdornment={
+          <InputAdornment position='end'>
+            <IconButton className='sendIcon' onClick={handleSubmit}>
+              <SendIcon color='inherit' />
+            </IconButton>
+          </InputAdornment>
+        }
+      />
+    </div>
   )
 }

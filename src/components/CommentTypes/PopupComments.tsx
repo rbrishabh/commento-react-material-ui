@@ -108,6 +108,7 @@ const PopupComments: React.FC<CommentPageProps> = ({
               pageType={pageType}
               pageId={pageId}
               commentsLoaded={commentsLoaded}
+              userData={userDetails}
             />
           </div>
         )}

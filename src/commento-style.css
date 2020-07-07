@@ -38,6 +38,13 @@
   border-radius: 50%;
   margin-left: 1rem;
 }
+.avatar {
+  height: 40px;
+  width: auto;
+  display: block;
+  border-radius: 50%;
+  margin-left: 1rem;
+}
 .commentHeader .commentHeader_content {
   margin-left: 1rem;
 }
