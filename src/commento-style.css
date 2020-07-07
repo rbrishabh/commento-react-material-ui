@@ -81,6 +81,9 @@
 .commentContainer {
   /* padding-top: 0.7rem; */
   margin-bottom: 20px;
+  margin-left: 1rem;
+  margin-right: 12px;
+  margin-top: 6px;
 
 }
 .commentContainerPop {
@@ -88,6 +91,7 @@
   margin-left: 1rem;
   margin-right: 12px;
   margin-bottom: 20px;
+  margin-top: 4px;
 
 }
 
