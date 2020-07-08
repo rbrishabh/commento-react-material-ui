@@ -106,7 +106,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
     <TextField
       fullWidth
       multiline
-      rowsMax={3}
+      rowsMax={2}
       variant='outlined'
       onChange={handleCommentBodyChange}
       value={commentBody}
