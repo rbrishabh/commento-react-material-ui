@@ -17,11 +17,11 @@ const App = () => {
           pageId={
             '1kQyBommouqmxS1RJHVMVi-[per-kb57kai28due-collection]-collection'
           }
-          allowOnlyOneRootComment
-          // pageType={'popup'}
-          // height={750}
-          // width={400}
-          // commentSystem={'team'}
+          // allowOnlyOneRootComment
+          pageType={'popup'}
+          height={750}
+          width={400}
+          commentSystem={'personal'}
         />
       </CommnetoAuthProvider>
     </div>
