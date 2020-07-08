@@ -3,11 +3,12 @@ import { addNewComment, addReplyToComment } from '../../utils/commentoApi'
 import { useCommentPageContext } from './CommentPageContext'
 import { CommentPageActions } from './CommentPageReducer'
 import IconButton from '@material-ui/core/IconButton'
-import OutlinedInput from '@material-ui/core/OutlinedInput'
+// import OutlinedInput from '@material-ui/core/OutlinedInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import SendIcon from '@material-ui/icons/Send'
 // import InputLabel from '@material-ui/core/InputLabel'
 // import FormControl from '@material-ui/core/FormControl'
+import TextField from '@material-ui/core/TextField'
 
 interface AddNewCommentProps {
   pageId: string
@@ -72,30 +73,41 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         className='avatar'
       />
 
-      <OutlinedInput
+      <TextField
         fullWidth
         onChange={handleCommentBodyChange}
         value={commentBody}
         style={{
           width: '100%',
           marginBottom: '10px',
-          borderRadius: '1rem 1rem 1rem 1rem',
           backgroundColor: 'white'
         }}
-        className=''
+        size='medium'
+        multiline
+        rowsMax={3}
+        className='textFieldInput'
+        variant='outlined'
         placeholder='Add a comment'
-        endAdornment={
-          <InputAdornment position='end'>
-            <IconButton className='sendIcon' onClick={handleSubmit}>
-              <SendIcon color='inherit' />
-            </IconButton>
-          </InputAdornment>
-        }
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton className='sendIcon' onClick={handleSubmit}>
+                <SendIcon color='inherit' />
+              </IconButton>
+            </InputAdornment>
+          ),
+          style: {
+            borderRadius: '1rem 1rem 1rem 1rem'
+          }
+        }}
       />
     </div>
   ) : pageType === 'popup' ? (
-    <OutlinedInput
+    <TextField
       fullWidth
+      multiline
+      rowsMax={3}
+      variant='outlined'
       onChange={handleCommentBodyChange}
       value={commentBody}
       style={{
@@ -108,13 +120,18 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
       }}
       className='comment-padding'
       placeholder='Add a comment'
-      endAdornment={
-        <InputAdornment position='end'>
-          <IconButton className='sendIcon' onClick={handleSubmit}>
-            <SendIcon color='inherit' />
-          </IconButton>
-        </InputAdornment>
-      }
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position='end'>
+            <IconButton className='sendIcon' onClick={handleSubmit}>
+              <SendIcon color='inherit' />
+            </IconButton>
+          </InputAdornment>
+        ),
+        style: {
+          borderRadius: '1rem 1rem 1rem 1rem'
+        }
+      }}
     />
   ) : (
     <div style={{ display: 'flex' }}>
@@ -124,27 +141,33 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         alt='User Image'
         className='avatar'
       />
-      <OutlinedInput
+      <TextField
         fullWidth
         onChange={handleCommentBodyChange}
         value={commentBody}
         style={{
-          marginTop: !commentsLoaded ? '500px' : '0px',
-          width: '95%',
+          width: '100%',
           marginBottom: '10px',
-          marginLeft: '2%',
-          borderRadius: '1rem 1rem 1rem 1rem',
           backgroundColor: 'white'
         }}
-        className='popup-comment-padding'
+        size='medium'
+        multiline
+        rowsMax={3}
+        className='textFieldInput'
+        variant='outlined'
         placeholder='Add a comment'
-        endAdornment={
-          <InputAdornment position='end'>
-            <IconButton className='sendIcon' onClick={handleSubmit}>
-              <SendIcon color='inherit' />
-            </IconButton>
-          </InputAdornment>
-        }
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton className='sendIcon' onClick={handleSubmit}>
+                <SendIcon color='inherit' />
+              </IconButton>
+            </InputAdornment>
+          ),
+          style: {
+            borderRadius: '1rem 1rem 1rem 1rem'
+          }
+        }}
       />
     </div>
   )

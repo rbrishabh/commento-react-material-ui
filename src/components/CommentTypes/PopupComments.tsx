@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: (props: any) => (props.height ? props.height : '600px'),
       width: (props: any) => (props.width ? props.width : '300px'),
       overflowY: 'scroll',
+      overflowX: 'hidden',
       padding: theme.spacing(0)
     },
     rootDiv: {

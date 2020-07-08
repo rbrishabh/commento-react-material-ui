@@ -91,10 +91,12 @@
   margin-left: 1rem;
   margin-right: 12px;
   margin-top: 6px;
+  word-wrap: break-word;
 
 }
 .commentContainerPop {
   /* padding-top: 0.7rem; */
+  word-wrap: break-word;
   margin-left: 1rem;
   margin-right: 12px;
   margin-bottom: 20px;
