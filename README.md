@@ -24,15 +24,15 @@ npm i commento-react-material-ui
 import React from 'react'
 
 import { CommnetoAuthProvider, CommentsPage } from 'commento-react-material-ui'
-import 'commento-react/dist/commento-style.css'
-const dummyAuthToken = process.env.REACT_APP_AUTH_TOKEN
+import 'commento-react-material-ui/dist/commento-style.css'
+const dummyAuthToken = process.env.REACT_APP_AUTH_TOKEN // your commento auth token
 
 const App = () => {
   return (
     <div>
       <CommnetoAuthProvider
         sso={true}
-        commentoOrigin={process.env.REACT_APP_COMMENTO_ORIGIN as string}
+        commentoOrigin={process.env.REACT_APP_COMMENTO_ORIGIN as string} // your commento origin URL
         ssoToken={dummyAuthToken}
       >
           <CommentsPage
