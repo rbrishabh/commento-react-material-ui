@@ -130,7 +130,7 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                marginRight: pageType === 'popup' ? '10px' : '30px',
+                marginRight: pageType === 'popup' ? '10px' : '30px'
                 // marginTop: pageType === 'popup' ? '10px' : '30px'
               }}
             >
@@ -158,7 +158,7 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
                     )}
                   </React.Fragment>
                 ) : (
-                  ''
+                  <div style={{ padding: '15px' }} />
                 )}
               </div>
             </div>

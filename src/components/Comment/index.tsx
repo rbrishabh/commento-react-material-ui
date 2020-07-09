@@ -98,8 +98,10 @@ export const Comment: React.FC<CommentProps> = ({
           <div
             // className='commentActionBody'
             style={{
-              display: pageType === 'popup' ? 'flex' : '',
-              justifyContent: pageType === 'popup' ? 'space-between' : ''
+              display: pageType === 'popup' ? 'flex' : 'flex',
+              flexDirection: 'column',
+              justifyContent:
+                pageType === 'popup' ? 'space-between' : 'space-between'
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -132,6 +134,7 @@ export const Comment: React.FC<CommentProps> = ({
           <AddNewCommnet
             pageId={pageId}
             pageType={pageType}
+            isReply
             parentHex={commentDetails.commentHex}
             onSuccess={handleReplyClick}
             userData={

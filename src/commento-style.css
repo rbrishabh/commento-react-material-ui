@@ -87,7 +87,7 @@
 
 .commentContainer {
   /* padding-top: 0.7rem; */
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   margin-left: 1rem;
   margin-right: 12px;
   margin-top: 6px;
@@ -99,7 +99,7 @@
   word-break: break-word;
   margin-left: 1rem;
   margin-right: 12px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   margin-top: 4px;
 
 }
@@ -141,6 +141,7 @@
   box-shadow: none !important;
   color: #adb5bd !important;
   right: -10px !important;
+  top: -20px !important;
 }
 
 .commentActions button:not(:first-child) {

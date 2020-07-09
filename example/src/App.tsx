@@ -15,9 +15,8 @@ const App = () => {
       >
         <CommentsPage
           pageId={
-            '1kQyBommouqmxS1RJHVMVi-[per-kb57kai28due-collection]-collection'
+            '2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization'
           }
-          // allowOnlyOneRootComment
           pageType={'popup'}
           height={750}
           width={400}

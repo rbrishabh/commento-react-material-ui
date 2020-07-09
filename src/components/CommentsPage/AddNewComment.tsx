@@ -18,6 +18,7 @@ interface AddNewCommentProps {
   scrollToBottom?: () => void
   commentsLoaded?: any
   userData?: any
+  isReply?: boolean
 }
 
 export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
@@ -27,7 +28,8 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
   onSuccess,
   scrollToBottom,
   commentsLoaded,
-  userData
+  userData,
+  isReply = false
 }) => {
   console.log(userData)
   const [commentBody, setCommentBody] = useState<string>('')
@@ -65,14 +67,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
     setCommentBody(newCommentBody)
   }
   return pageType === 'grid' ? (
-    <div style={{ display: 'flex' }}>
-      <img
-        style={{ margin: '10px 5px' }}
-        src={userData.photo}
-        alt='User Image'
-        className='avatar'
-      />
-
+    isReply ? (
       <TextField
         fullWidth
         onChange={handleCommentBodyChange}
@@ -101,24 +96,123 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
           }
         }}
       />
-    </div>
+    ) : (
+      <div style={{ display: 'flex' }}>
+        <img
+          style={{ margin: '10px 5px' }}
+          src={userData.photo}
+          alt='User Image'
+          className='avatar'
+        />
+
+        <TextField
+          fullWidth
+          onChange={handleCommentBodyChange}
+          value={commentBody}
+          style={{
+            width: '100%',
+            marginBottom: '10px',
+            backgroundColor: 'white'
+          }}
+          size='medium'
+          multiline
+          rowsMax={3}
+          className='textFieldInput'
+          variant='outlined'
+          placeholder='Add a comment'
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position='end'>
+                <IconButton className='sendIcon' onClick={handleSubmit}>
+                  <SendIcon color='inherit' />
+                </IconButton>
+              </InputAdornment>
+            ),
+            style: {
+              borderRadius: '1rem 1rem 1rem 1rem'
+            }
+          }}
+        />
+      </div>
+    )
   ) : pageType === 'popup' ? (
+    isReply ? (
+      <TextField
+        fullWidth
+        multiline
+        rowsMax={2}
+        variant='outlined'
+        onChange={handleCommentBodyChange}
+        value={commentBody}
+        style={{
+          width: '95%',
+          marginBottom: '10px',
+          marginLeft: '2%',
+          borderRadius: '1rem 1rem 1rem 1rem',
+          backgroundColor: 'white'
+        }}
+        className='comment-padding'
+        placeholder='Add a comment'
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton className='sendIcon' onClick={handleSubmit}>
+                <SendIcon color='inherit' />
+              </IconButton>
+            </InputAdornment>
+          ),
+          style: {
+            borderRadius: '1rem 1rem 1rem 1rem'
+          }
+        }}
+      />
+    ) : (
+      <TextField
+        fullWidth
+        multiline
+        rowsMax={2}
+        variant='outlined'
+        onChange={handleCommentBodyChange}
+        value={commentBody}
+        style={{
+          marginTop: !commentsLoaded ? '500px' : '0px',
+          width: '95%',
+          marginBottom: '10px',
+          marginLeft: '2%',
+          borderRadius: '1rem 1rem 1rem 1rem',
+          backgroundColor: 'white'
+        }}
+        className='comment-padding'
+        placeholder='Add a comment'
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton className='sendIcon' onClick={handleSubmit}>
+                <SendIcon color='inherit' />
+              </IconButton>
+            </InputAdornment>
+          ),
+          style: {
+            borderRadius: '1rem 1rem 1rem 1rem'
+          }
+        }}
+      />
+    )
+  ) : isReply ? (
     <TextField
       fullWidth
-      multiline
-      rowsMax={2}
-      variant='outlined'
       onChange={handleCommentBodyChange}
       value={commentBody}
       style={{
-        marginTop: !commentsLoaded ? '500px' : '0px',
-        width: '95%',
+        width: '100%',
         marginBottom: '10px',
-        marginLeft: '2%',
-        borderRadius: '1rem 1rem 1rem 1rem',
         backgroundColor: 'white'
       }}
-      className='comment-padding'
+      size='medium'
+      multiline
+      rowsMax={3}
+      className='textFieldInput'
+      variant='outlined'
       placeholder='Add a comment'
       InputProps={{
         endAdornment: (
