@@ -131,7 +131,7 @@ export const Comment: React.FC<CommentProps> = ({
         <div className='repliesContianer'>
           <AddNewCommnet
             pageId={pageId}
-            pageType='grid'
+            pageType={pageType}
             parentHex={commentDetails.commentHex}
             onSuccess={handleReplyClick}
             userData={
