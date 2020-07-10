@@ -31,7 +31,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
   userData,
   isReply = false
 }) => {
-  console.log(userData)
+  // console.log(userData)
   const [commentBody, setCommentBody] = useState<string>('')
   const { commentDispatch, currentCommenterDetails } = useCommentPageContext()
   const handleSubmit = useCallback(async () => {

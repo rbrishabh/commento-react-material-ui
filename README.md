@@ -43,6 +43,25 @@ const App = () => {
           height={600}
           width={400}
           commentSystem={'organization'}>
+
+        <CommentsCountLib
+          pageId={`your-awesome-page-id`}  // to see the count of comments for a particular pag
+        >
+          {(
+            count,
+            countLoaded,
+            isAuthenticated,
+            isAuthenticating
+          ) => (
+            <div style={{marginTop: '200px'}}>
+              {count}
+              {countLoaded}
+              {isAuthenticating}
+              {isAuthenticated}
+            </div>
+          )}
+        </CommentsCountLib>
+
       </CommnetoAuthProvider>
     </div>
   )

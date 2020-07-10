@@ -19,7 +19,7 @@ export const EditComment: React.FC<EditCommentProps> = ({
   const { commentDispatch } = useCommentPageContext()
   const handleSubmit = useCallback(async () => {
     const { comment } = await updateComment(commentDetails, commentBody)
-    console.log('handleSubmit -> comment', comment)
+    // console.log('handleSubmit -> comment', comment)
     commentDispatch({
       payload: comment,
       type: CommentPageActions.UPDATE_COMMENT
@@ -29,7 +29,7 @@ export const EditComment: React.FC<EditCommentProps> = ({
 
   const handleCommentBodyChange = (e: any) => {
     const newCommentBody = e.target.value
-    console.log('handleCommentBodyChange -> newCommentBody', newCommentBody)
+    // console.log('handleCommentBodyChange -> newCommentBody', newCommentBody)
     setCommentBody(newCommentBody)
   }
 

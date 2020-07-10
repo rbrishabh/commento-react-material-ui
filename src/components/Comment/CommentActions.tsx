@@ -33,18 +33,18 @@ interface CommentActionsProps {
 
 export const CommentActions: React.FC<CommentActionsProps> = ({
   commentHex,
-  onCollapseClick,
+  // onCollapseClick,
   onEditClick,
   isOwnComment,
   onReplyClick,
-  repliesCollapsed,
+  // repliesCollapsed,
   pageType,
-  commentSystem,
+  // commentSystem,
   isHovered,
   isReply
 }) => {
   const { commentDispatch } = useCommentPageContext()
-  console.log(onCollapseClick, repliesCollapsed, commentSystem, pageType)
+  // console.log(onCollapseClick, repliesCollapsed, commentSystem, pageType)
 
   const StyledMenu = withStyles({
     paper: {

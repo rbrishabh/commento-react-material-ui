@@ -6,7 +6,7 @@ export const commentsReducer = (
   comments: { [key: string]: CommentDetails },
   action: { type: CommentPageActions; payload: any }
 ): { [key: string]: CommentDetails } => {
-  console.log('reducer', comments, action)
+  // console.log('reducer', comments, action)
   switch (action.type) {
     case CommentPageActions.COMMENTS_LOADED:
       return { ...action.payload }

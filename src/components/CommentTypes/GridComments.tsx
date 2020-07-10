@@ -24,7 +24,7 @@ const GridComments: React.FC<CommentPageProps> = ({
   commentSystem
 }) => {
   commentValues = commentValues.reverse()
-  console.log(userDetails)
+  // console.log(userDetails)
   return (
     <div className='comments-page'>
       {/* <div className='commentHeader userdetails'>

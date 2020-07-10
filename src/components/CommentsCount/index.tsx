@@ -23,7 +23,8 @@ export const CommentsCount: React.FC<CommentsCountProps> = ({
     if (isAuthenticated) {
       const getComments = async () => {
         // get comments usins the commentoProvider
-        const { comments } = await fetchComments(pageId)
+        let { comments } = await fetchComments(pageId)
+        comments = comments.filter(comment => !comment.deleted)
         setcommentsLength(comments.length)
         setCommentsLoaded(true)
       }

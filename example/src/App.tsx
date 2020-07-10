@@ -2,9 +2,10 @@ import React from 'react'
 
 import { CommnetoAuthProvider, CommentsPage } from 'commento-react-material-ui'
 import 'commento-react-material-ui/dist/commento-style.css'
+import { CommentsCount as CommentsCountLib } from 'commento-react-material-ui'
 
 const dummyAuthToken = process.env.REACT_APP_AUTH_TOKEN
-console.log(dummyAuthToken)
+// console.log(dummyAuthToken)
 const App = () => {
   return (
     <div>
@@ -15,13 +16,30 @@ const App = () => {
       >
         <CommentsPage
           pageId={
-            '2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization'
+            'your-awesome-page-id'
           }
           pageType={'popup'}
           height={750}
           width={400}
           commentSystem={'personal'}
         />
+        <CommentsCountLib
+          pageId={`your-awesome-page-id`}
+        >
+          {(
+            count,
+            countLoaded,
+            isAuthenticated,
+            isAuthenticating
+          ) => (
+            <div style={{marginTop: '200px'}}>
+              {count}
+              {countLoaded}
+              {isAuthenticating}
+              {isAuthenticated}
+            </div>
+          )}
+        </CommentsCountLib>
       </CommnetoAuthProvider>
     </div>
   )

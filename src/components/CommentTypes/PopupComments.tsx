@@ -57,7 +57,7 @@ const PopupComments: React.FC<CommentPageProps> = ({
 }) => {
   commentValues = commentValues.reverse()
   const classes = useStyles({ height, width })
-  console.log(userDetails, commentValues)
+  // console.log(userDetails, commentValues)
   useEffect(() => {
     if (commentsLoaded) scrollToBottom()
   }, [commentsLoaded])
