@@ -16,7 +16,7 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
   return (
     <div className='commentHeader'>
       {commentSystem !== 'personal' ? (
-        commentData.deleted && userData.photo ? (
+        commentData.deleted || !userData.photo ? (
           <div className='anonymous-image'>?</div>
         ) : (
           <img src={userData.photo} alt='User Image' className='avatar' />
