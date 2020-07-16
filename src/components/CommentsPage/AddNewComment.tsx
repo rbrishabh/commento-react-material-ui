@@ -98,12 +98,16 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
       />
     ) : (
       <div style={{ display: 'flex' }}>
-        <img
-          style={{ margin: '10px 5px' }}
-          src={userData.photo}
-          alt='User Image'
-          className='avatar'
-        />
+        {!userData || !userData.photo ? (
+          <div className='anonymous-image'>?</div>
+        ) : (
+          <img
+            style={{ margin: '10px 5px' }}
+            src={userData ? (userData.photo ? userData.photo : '?') : '?'}
+            alt='User Image'
+            className='avatar'
+          />
+        )}
 
         <TextField
           fullWidth
