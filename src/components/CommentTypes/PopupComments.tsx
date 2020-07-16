@@ -79,7 +79,7 @@ const PopupComments: React.FC<CommentPageProps> = ({
           </div> */}
 
         {commentsLoaded ? (
-          <>
+          <React.Fragment>
             <div
               id='scrollToRoot'
               style={{ padding: '16px' }}
@@ -106,7 +106,7 @@ const PopupComments: React.FC<CommentPageProps> = ({
                 />
               </div>
             )}
-          </>
+          </React.Fragment>
         ) : (
           <div style={{ marginTop: '1rem' }}>
             <div className='commento-alert'>

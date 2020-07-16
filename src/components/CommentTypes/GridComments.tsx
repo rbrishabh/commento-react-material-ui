@@ -35,7 +35,7 @@ const GridComments: React.FC<CommentPageProps> = ({
       </div> */}
 
       {commentsLoaded ? (
-        <>
+        <React.Fragment>
           {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
             <AddNewCommnet
               pageType={pageType}
@@ -52,7 +52,7 @@ const GridComments: React.FC<CommentPageProps> = ({
               />
             ))}
           </div>
-        </>
+        </React.Fragment>
       ) : (
         // <div style={{ marginTop: '1rem' }}>
         //   <div className='commento-alert'>
