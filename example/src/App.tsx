@@ -16,7 +16,7 @@ const App = () => {
       >
         <CommentsPage
           pageId={
-            'your-awesome-page-id'
+            '2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization'
           }
           pageType={'popup'}
           height={750}
@@ -24,17 +24,17 @@ const App = () => {
           commentSystem={'personal'}
         />
         <CommentsCountLib
-          pageId={`your-awesome-page-id`}
+          pageId={`2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization`}
         >
           {(
-            count,
-            countLoaded,
+            personalNotesCount,
+            personalNotesDataLoaded,
             isAuthenticated,
             isAuthenticating
           ) => (
             <div style={{marginTop: '200px'}}>
-              {count}
-              {countLoaded}
+              {personalNotesCount}
+              {personalNotesDataLoaded}
               {isAuthenticating}
               {isAuthenticated}
             </div>

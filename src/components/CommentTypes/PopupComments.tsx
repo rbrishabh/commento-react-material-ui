@@ -79,38 +79,40 @@ const PopupComments: React.FC<CommentPageProps> = ({
           </div> */}
 
         {commentsLoaded ? (
-          <div
-            id='scrollToRoot'
-            style={{ padding: '16px' }}
-            className={classes.root}
-          >
-            {commentValues.map((comment: CommentDetails) => (
-              <Comment
-                commentSystem={commentSystem}
-                key={comment.commentHex}
-                pageType={pageType}
-                commentDetails={comment}
-              />
-            ))}
-          </div>
+          <React.Fragment>
+            <div
+              id='scrollToRoot'
+              style={{ padding: '16px' }}
+              className={classes.root}
+            >
+              {commentValues.map((comment: CommentDetails) => (
+                <Comment
+                  commentSystem={commentSystem}
+                  key={comment.commentHex}
+                  pageType={pageType}
+                  commentDetails={comment}
+                />
+              ))}
+            </div>
+            {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
+              <div style={{ marginTop: '12px', width: width }}>
+                {' '}
+                <AddNewCommnet
+                  scrollToBottom={scrollToBottom}
+                  pageType={pageType}
+                  pageId={pageId}
+                  commentsLoaded={commentsLoaded}
+                  userData={userDetails}
+                />
+              </div>
+            )}
+          </React.Fragment>
         ) : (
           <div style={{ marginTop: '1rem' }}>
             <div className='commento-alert'>
               Loading the comment stream{' '}
               <img src={LoadingGif} className='loading-gif' />
             </div>
-          </div>
-        )}
-        {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
-          <div style={{ marginTop: '12px', width: width }}>
-            {' '}
-            <AddNewCommnet
-              scrollToBottom={scrollToBottom}
-              pageType={pageType}
-              pageId={pageId}
-              commentsLoaded={commentsLoaded}
-              userData={userDetails}
-            />
           </div>
         )}
       </div>

@@ -33,24 +33,26 @@ const GridComments: React.FC<CommentPageProps> = ({
           <p className='username'>{userDetails.name}</p>
         </div>
       </div> */}
-      {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
-        <AddNewCommnet
-          pageType={pageType}
-          pageId={pageId}
-          userData={userDetails}
-        />
-      )}
 
       {commentsLoaded ? (
-        <div className='commentslist-wrapper'>
-          {commentValues.map((comment: CommentDetails) => (
-            <Comment
-              commentSystem={commentSystem}
-              key={comment.commentHex}
-              commentDetails={comment}
+        <React.Fragment>
+          {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
+            <AddNewCommnet
+              pageType={pageType}
+              pageId={pageId}
+              userData={userDetails}
             />
-          ))}
-        </div>
+          )}
+          <div className='commentslist-wrapper'>
+            {commentValues.map((comment: CommentDetails) => (
+              <Comment
+                commentSystem={commentSystem}
+                key={comment.commentHex}
+                commentDetails={comment}
+              />
+            ))}
+          </div>
+        </React.Fragment>
       ) : (
         // <div style={{ marginTop: '1rem' }}>
         //   <div className='commento-alert'>
