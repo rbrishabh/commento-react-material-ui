@@ -21,7 +21,7 @@ const App = () => {
           pageType={'popup'}
           height={750}
           width={400}
-          commentSystem={'personal'}
+          commentSystem={'organization'}
         />
         <CommentsCountLib
           pageId={`2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization`}
@@ -32,7 +32,7 @@ const App = () => {
             isAuthenticated,
             isAuthenticating
           ) => (
-            <div style={{marginTop: '200px'}}>
+            <div style={{ marginTop: '200px' }}>
               {personalNotesCount}
               {personalNotesDataLoaded}
               {isAuthenticating}

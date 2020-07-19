@@ -3,6 +3,7 @@ import { useCommentPageContext } from '../CommentsPage/CommentPageContext'
 import { voteComment, deleteComment } from '../../utils/commentoApi'
 import { CommentPageActions } from '../CommentsPage/CommentPageReducer'
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt'
+import ThumbDownAltIcon from '@material-ui/icons/ThumbDownAlt'
 import ReplyIcon from '@material-ui/icons/Reply'
 
 import {
@@ -29,6 +30,7 @@ interface CommentActionsProps {
   commentSystem?: string
   isHovered?: boolean
   isReply?: boolean
+  likedState: number
 }
 
 export const CommentActions: React.FC<CommentActionsProps> = ({
@@ -41,7 +43,8 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
   pageType,
   // commentSystem,
   isHovered,
-  isReply
+  isReply,
+  likedState
 }) => {
   const { commentDispatch } = useCommentPageContext()
   // console.log(onCollapseClick, repliesCollapsed, commentSystem, pageType)
@@ -84,6 +87,17 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
     await voteComment(1, commentHex)
     commentDispatch({
       type: CommentPageActions.UPVOTE_COMMENT,
+      payload: {
+        commentHex: commentHex
+      }
+    })
+  }, [commentHex])
+
+  const downvoteComment = useCallback(async () => {
+    handleCloseSettings()
+    await voteComment(0, commentHex)
+    commentDispatch({
+      type: CommentPageActions.DOWNVOTE_COMMENT,
       payload: {
         commentHex: commentHex
       }
@@ -137,13 +151,26 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
               <div style={{ display: 'flex', color: 'grey' }}>
                 {isHovered ? (
                   <React.Fragment>
-                    <Button
-                      style={{ color: 'grey' }}
-                      size='small'
-                      onClick={upvoteComment}
-                    >
-                      <ThumbUpAltIcon fontSize='small' color='inherit' /> Like
-                    </Button>
+                    {likedState === 0 && (
+                      <Button
+                        style={{ color: 'grey' }}
+                        size='small'
+                        onClick={upvoteComment}
+                      >
+                        <ThumbUpAltIcon fontSize='small' color='inherit' /> Like
+                      </Button>
+                    )}
+                    {likedState === 1 && (
+                      <Button
+                        style={{ color: 'grey' }}
+                        size='small'
+                        onClick={downvoteComment}
+                      >
+                        <ThumbDownAltIcon fontSize='small' color='inherit' />{' '}
+                        Unlike
+                      </Button>
+                    )}
+
                     {!isReply ? (
                       <Button
                         style={{ color: 'grey' }}

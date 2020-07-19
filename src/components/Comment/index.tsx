@@ -125,6 +125,7 @@ export const Comment: React.FC<CommentProps> = ({
               isOwnComment={isOwnComment}
               onReplyClick={handleReplyClick}
               repliesCollapsed={collapseChildren}
+              likedState={commentDetails.direction}
             />
           </div>
         )}

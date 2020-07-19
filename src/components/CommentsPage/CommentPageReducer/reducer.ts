@@ -13,10 +13,12 @@ export const commentsReducer = (
     case CommentPageActions.UPVOTE_COMMENT:
       return produce(comments, draftComments => {
         draftComments[action.payload.commentHex].score += 1
+        draftComments[action.payload.commentHex].direction = 1
       })
     case CommentPageActions.DOWNVOTE_COMMENT:
       return produce(comments, draftComments => {
         draftComments[action.payload.commentHex].score -= 1
+        draftComments[action.payload.commentHex].direction = 0
       })
     case CommentPageActions.ADD_NEW_COMMENT:
       return produce(comments, draftComments => {
