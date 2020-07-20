@@ -35,6 +35,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
   const [commentBody, setCommentBody] = useState<string>('')
   const { commentDispatch, currentCommenterDetails } = useCommentPageContext()
   const handleSubmit = useCallback(async () => {
+    if (!commentBody) return
     if (parentHex) {
       const { comment: newComment } = await addReplyToComment({
         commentMarkdown: commentBody,
