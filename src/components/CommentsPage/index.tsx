@@ -25,6 +25,7 @@ interface CommentPageProps {
   height?: number
   width?: number
   commentSystem?: string
+  label?: string
 }
 
 const generateClassName = createGenerateClassName({
@@ -84,9 +85,9 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
   pageId,
   allowOnlyOneRootComment,
   pageType = 'grid',
-  height = 0,
   width = 0,
-  commentSystem
+  commentSystem,
+  label
 }) => {
   const [commentsLoaded, setCommentsLoaded] = useState<boolean>(false)
   const [comments, commentDispatch] = useReducer(commentsReducer, {})
@@ -108,11 +109,11 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
       const getComments = async () => {
         // get comments usins the commentoProvider
         const { comments, commenters } = await fetchComments(pageId)
+        setCommentors(commenters)
         commentDispatch({
           type: CommentPageActions.COMMENTS_LOADED,
           payload: convertArrayToKeyValuePairs(addMarkdownToComments(comments))
         })
-        setCommentors(commenters)
         setCommentsLoaded(true)
       }
       getComments()
@@ -164,7 +165,6 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
         ) : pageType === 'popup' ? (
           <PopupComments
             commentSystem={commentSystem}
-            height={height}
             width={width}
             commentValues={commentValues}
             userDetails={userDetails}
@@ -172,6 +172,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
             allowOnlyOneRootComment={allowOnlyOneRootComment}
             commentsLoaded={commentsLoaded}
             pageType={pageType}
+            label={label || 'Comments'}
           />
         ) : (
           ''

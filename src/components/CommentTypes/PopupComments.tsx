@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Comment from '../Comment'
 import { AddNewCommnet } from '../CommentsPage/AddNewComment'
 import LoadingGif from '../../assets/loading.gif'
 import { CommentDetails } from '../../interfaces'
-// import Paper from '@material-ui/core/Paper'
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import { animateScroll } from 'react-scroll'
+import { ArrowExpand, ArrowShrink, Cross } from './Icons'
 
 interface CommentPageProps {
   pageId: string
@@ -14,26 +14,84 @@ interface CommentPageProps {
   userDetails: any
   commentValues: any
   commentsLoaded: any
-  height: number
   commentSystem?: string
   width: number
+  expandedWidth?: number
+  label: string
+  onClose?: () => void
 }
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      height: (props: any) => (props.height ? props.height : '600px'),
-      width: (props: any) => (props.width ? props.width : '300px'),
-      overflowY: 'scroll',
-      overflowX: 'hidden',
-      padding: theme.spacing(0)
+      maxHeight: '90vh',
+      minHeight: '65vh',
+      width: (props: any) =>
+        props.isExpanded ? props.expandedWidth : props.width,
+      padding: theme.spacing(0),
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'width 0.3s ease',
+      boxShadow: theme.shadows[5],
+      borderRadius: '10px',
+      position: 'relative',
+      overflow: 'hidden'
     },
-    rootDiv: {
-      height: (props: any) => (props.height ? props.height : '600px'),
-      width: (props: any) => (props.width ? props.width : '300px'),
-      borderRadius: '1rem 1rem 1rem 1rem'
+    popupHeader: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`,
+      paddingBottom: theme.spacing(4),
+      background: 'linear-gradient(to bottom, white 55%, rgba(0,0,0,0))',
+      zIndex: 10,
+      display: 'flex',
+      alignItems: 'center',
+      '& .label': {
+        color: theme.palette.primary.main,
+        display: 'inline-block',
+        flex: 1
+      }
     },
-    paper: {
-      borderRadius: '2rem 2rem 2rem 2rem'
+    headerActions: {
+      display: 'flex',
+      alignItems: 'center',
+      '& .actionBtn': {
+        display: 'inline-flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 30,
+        width: 30,
+        background: '#f8f9f8',
+        borderRadius: 10,
+        cursor: 'pointer',
+        '&:hover': {
+          background: '#f1f1f1'
+        },
+        '&:not(:last-child)': {
+          marginRight: theme.spacing(1)
+        },
+        '&.cross': {
+          '& svg': {
+            height: 10
+          }
+        },
+        '& svg': {
+          verticalAlign: 'middle',
+          height: 20,
+          width: 'auto'
+        }
+      }
+    },
+    commentsContainer: {
+      minHeight: 0,
+      flex: 1,
+      padding: theme.spacing(2),
+      paddingTop: theme.spacing(7),
+      overflowY: 'auto'
+    },
+    addNewCommentWrapper: {
+      padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`
     }
   })
 )
@@ -51,61 +109,50 @@ const PopupComments: React.FC<CommentPageProps> = ({
   allowOnlyOneRootComment,
   commentValues,
   commentsLoaded,
-  height,
   width,
-  commentSystem
+  expandedWidth = 1000,
+  commentSystem,
+  label,
+  onClose
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
   commentValues = commentValues.reverse()
-  const classes = useStyles({ height, width })
-  // console.log(userDetails, commentValues)
+  const classes = useStyles({ width, isExpanded, expandedWidth })
   useEffect(() => {
     if (commentsLoaded) scrollToBottom()
   }, [commentsLoaded])
 
-  return (
-    <div className={classes.rootDiv}>
-      {/* <Paper variant='outlined' className={classes.paper}> */}
-      <div className='comments-page-pop'>
-        {/* <div className='commentHeader userdetails'>
-            <img src={userDetails.photo} alt='User Image' className='avatar' />
-            <div className='commentHeader_content'>
-              <p className='username'>
-                {commentSystem === 'personal'
-                  ? //   ? 'Personal Notes'
-                    userDetails.name
-                  : userDetails.name}
-              </p>
-            </div>
-          </div> */}
+  const expandPopUp = () => setIsExpanded(true)
+  const shrinkPopUp = () => setIsExpanded(false)
 
+  return (
+    <div className={classes.root}>
+      <div className={classes.popupHeader}>
+        <span className='label'>{label}</span>
+        <div className={classes.headerActions}>
+          <span
+            className='actionBtn'
+            onClick={isExpanded ? shrinkPopUp : expandPopUp}
+          >
+            {isExpanded ? <ArrowShrink /> : <ArrowExpand />}
+          </span>
+          <span className='actionBtn cross' onClick={onClose}>
+            <Cross />
+          </span>
+        </div>
+      </div>
+      <div id='scrollToRoot' className={classes.commentsContainer}>
         {commentsLoaded ? (
           <React.Fragment>
-            <div
-              id='scrollToRoot'
-              style={{ padding: '16px' }}
-              className={classes.root}
-            >
-              {commentValues.map((comment: CommentDetails) => (
-                <Comment
-                  commentSystem={commentSystem}
-                  key={comment.commentHex}
-                  pageType={pageType}
-                  commentDetails={comment}
-                />
-              ))}
-            </div>
-            {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
-              <div style={{ marginTop: '12px', width: width }}>
-                {' '}
-                <AddNewCommnet
-                  scrollToBottom={scrollToBottom}
-                  pageType={pageType}
-                  pageId={pageId}
-                  commentsLoaded={commentsLoaded}
-                  userData={userDetails}
-                />
-              </div>
-            )}
+            {commentValues.map((comment: CommentDetails, index: number) => (
+              <Comment
+                commentSystem={commentSystem}
+                key={comment.commentHex}
+                pageType={pageType}
+                commentDetails={comment}
+                hideDivider={index === 0}
+              />
+            ))}
           </React.Fragment>
         ) : (
           <div style={{ marginTop: '1rem' }}>
@@ -116,7 +163,17 @@ const PopupComments: React.FC<CommentPageProps> = ({
           </div>
         )}
       </div>
-      {/* </Paper> */}
+      {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
+        <div className={classes.addNewCommentWrapper}>
+          <AddNewCommnet
+            scrollToBottom={scrollToBottom}
+            pageType={pageType}
+            pageId={pageId}
+            commentsLoaded={commentsLoaded}
+            userData={userDetails}
+          />
+        </div>
+      )}
     </div>
   )
 }

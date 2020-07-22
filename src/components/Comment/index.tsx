@@ -17,13 +17,15 @@ interface CommentProps {
   pageType?: string
   commentSystem?: string
   isReply?: boolean
+  hideDivider?: boolean
 }
 
 export const Comment: React.FC<CommentProps> = ({
   commentDetails,
   pageType = 'grid',
   commentSystem,
-  isReply = false
+  isReply = false,
+  hideDivider = false
 }) => {
   const {
     pageId,
@@ -73,13 +75,12 @@ export const Comment: React.FC<CommentProps> = ({
   const handleReplyClick = useCallback(() => setReplyMode(prev => !prev), [])
   return (
     <div className='comment-wrapper'>
-      {/* Render the user details, comment and its actions */}
+      {!hideDivider && !isReply && <Divider className='dividerMargin' />}
       <div
         className={pageType === 'popup' ? 'commentPopupBody' : 'commentBody'}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        {/* {pageType === 'popup' ?  */}
-        <Divider className='dividerMargin' />
-        {/* : ''} */}
         <CommentHeader
           commentSystem={commentSystem}
           userData={
@@ -96,15 +97,12 @@ export const Comment: React.FC<CommentProps> = ({
           />
         ) : (
           <div
-            // className='commentActionBody'
             style={{
               display: pageType === 'popup' ? 'flex' : 'flex',
               flexDirection: 'column',
               justifyContent:
                 pageType === 'popup' ? 'space-between' : 'space-between'
             }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
           >
             <div
               className={

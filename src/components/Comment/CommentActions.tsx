@@ -104,17 +104,6 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
     })
   }, [commentHex])
 
-  // const downvoteComment = useCallback(async () => {
-  //   handleCloseSettings()
-  //   await voteComment(-1, commentHex)
-  //   commentDispatch({
-  //     type: CommentPageActions.DOWNVOTE_COMMENT,
-  //     payload: {
-  //       commentHex: commentHex
-  //     }
-  //   })
-  // }, [commentHex])
-
   const handleDeleteComment = useCallback(async () => {
     handleCloseSettings()
     await deleteComment(commentHex)

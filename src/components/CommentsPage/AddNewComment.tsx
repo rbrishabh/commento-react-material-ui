@@ -3,13 +3,27 @@ import { addNewComment, addReplyToComment } from '../../utils/commentoApi'
 import { useCommentPageContext } from './CommentPageContext'
 import { CommentPageActions } from './CommentPageReducer'
 import IconButton from '@material-ui/core/IconButton'
-// import OutlinedInput from '@material-ui/core/OutlinedInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import SendIcon from '@material-ui/icons/Send'
-// import InputLabel from '@material-ui/core/InputLabel'
-// import FormControl from '@material-ui/core/FormControl'
 import TextField from '@material-ui/core/TextField'
+import { makeStyles } from '@material-ui/core'
 
+const useInputClasses = makeStyles(_theme => ({
+  root: {
+    border: 'none',
+    background: '#f8f9f8',
+    '&:hover': {
+      background: '#f1f1f1'
+    },
+    '&$focused': {
+      background: '#f1f1f1'
+    }
+  },
+  focused: {},
+  multiline: {
+    padding: '15px 17px'
+  }
+}))
 interface AddNewCommentProps {
   pageId: string
   parentHex?: string
@@ -27,7 +41,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
   pageType,
   onSuccess,
   scrollToBottom,
-  commentsLoaded,
+  // commentsLoaded,
   userData,
   isReply = false
 }) => {
@@ -67,36 +81,37 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
     const newCommentBody = e.target.value
     setCommentBody(newCommentBody)
   }
+  const classes = useInputClasses()
+  const InputComponent = (
+    <TextField
+      fullWidth
+      onChange={handleCommentBodyChange}
+      value={commentBody}
+      size='medium'
+      multiline
+      rowsMax={3}
+      variant='filled'
+      placeholder='Add a comment'
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position='end'>
+            <IconButton className='sendIcon' onClick={handleSubmit}>
+              <SendIcon color='inherit' />
+            </IconButton>
+          </InputAdornment>
+        ),
+        style: {
+          borderRadius: '1rem 1rem 1rem 1rem'
+        },
+        disableUnderline: true,
+        classes
+      }}
+    />
+  )
+
   return pageType === 'grid' ? (
     isReply ? (
-      <TextField
-        fullWidth
-        onChange={handleCommentBodyChange}
-        value={commentBody}
-        style={{
-          width: '100%',
-          marginBottom: '10px',
-          backgroundColor: 'white'
-        }}
-        size='medium'
-        multiline
-        rowsMax={3}
-        className='textFieldInput'
-        variant='outlined'
-        placeholder='Add a comment'
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position='end'>
-              <IconButton className='sendIcon' onClick={handleSubmit}>
-                <SendIcon color='inherit' />
-              </IconButton>
-            </InputAdornment>
-          ),
-          style: {
-            borderRadius: '1rem 1rem 1rem 1rem'
-          }
-        }}
-      />
+      InputComponent
     ) : (
       <div style={{ display: 'flex' }}>
         {!userData || !userData.photo ? (
@@ -110,128 +125,17 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
           />
         )}
 
-        <TextField
-          fullWidth
-          onChange={handleCommentBodyChange}
-          value={commentBody}
-          style={{
-            width: '100%',
-            marginBottom: '10px',
-            backgroundColor: 'white'
-          }}
-          size='medium'
-          multiline
-          rowsMax={3}
-          className='textFieldInput'
-          variant='outlined'
-          placeholder='Add a comment'
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton className='sendIcon' onClick={handleSubmit}>
-                  <SendIcon color='inherit' />
-                </IconButton>
-              </InputAdornment>
-            ),
-            style: {
-              borderRadius: '1rem 1rem 1rem 1rem'
-            }
-          }}
-        />
+        {InputComponent}
       </div>
     )
   ) : pageType === 'popup' ? (
     isReply ? (
-      <TextField
-        fullWidth
-        multiline
-        rowsMax={2}
-        variant='outlined'
-        onChange={handleCommentBodyChange}
-        value={commentBody}
-        style={{
-          width: '95%',
-          marginBottom: '10px',
-          marginLeft: '2%',
-          borderRadius: '1rem 1rem 1rem 1rem',
-          backgroundColor: 'white'
-        }}
-        className='comment-padding'
-        placeholder='Add a comment'
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position='end'>
-              <IconButton className='sendIcon' onClick={handleSubmit}>
-                <SendIcon color='inherit' />
-              </IconButton>
-            </InputAdornment>
-          ),
-          style: {
-            borderRadius: '1rem 1rem 1rem 1rem'
-          }
-        }}
-      />
+      InputComponent
     ) : (
-      <TextField
-        fullWidth
-        multiline
-        rowsMax={2}
-        variant='outlined'
-        onChange={handleCommentBodyChange}
-        value={commentBody}
-        style={{
-          marginTop: !commentsLoaded ? '500px' : '0px',
-          width: '95%',
-          marginBottom: '10px',
-          marginLeft: '2%',
-          borderRadius: '1rem 1rem 1rem 1rem',
-          backgroundColor: 'white'
-        }}
-        className='comment-padding'
-        placeholder='Add a comment'
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position='end'>
-              <IconButton className='sendIcon' onClick={handleSubmit}>
-                <SendIcon color='inherit' />
-              </IconButton>
-            </InputAdornment>
-          ),
-          style: {
-            borderRadius: '1rem 1rem 1rem 1rem'
-          }
-        }}
-      />
+      InputComponent
     )
   ) : isReply ? (
-    <TextField
-      fullWidth
-      onChange={handleCommentBodyChange}
-      value={commentBody}
-      style={{
-        width: '100%',
-        marginBottom: '10px',
-        backgroundColor: 'white'
-      }}
-      size='medium'
-      multiline
-      rowsMax={3}
-      className='textFieldInput'
-      variant='outlined'
-      placeholder='Add a comment'
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position='end'>
-            <IconButton className='sendIcon' onClick={handleSubmit}>
-              <SendIcon color='inherit' />
-            </IconButton>
-          </InputAdornment>
-        ),
-        style: {
-          borderRadius: '1rem 1rem 1rem 1rem'
-        }
-      }}
-    />
+    InputComponent
   ) : (
     <div style={{ display: 'flex' }}>
       <img
@@ -240,34 +144,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         alt='User Image'
         className='avatar'
       />
-      <TextField
-        fullWidth
-        onChange={handleCommentBodyChange}
-        value={commentBody}
-        style={{
-          width: '100%',
-          marginBottom: '10px',
-          backgroundColor: 'white'
-        }}
-        size='medium'
-        multiline
-        rowsMax={3}
-        className='textFieldInput'
-        variant='outlined'
-        placeholder='Add a comment'
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position='end'>
-              <IconButton className='sendIcon' onClick={handleSubmit}>
-                <SendIcon color='inherit' />
-              </IconButton>
-            </InputAdornment>
-          ),
-          style: {
-            borderRadius: '1rem 1rem 1rem 1rem'
-          }
-        }}
-      />
+      {InputComponent}
     </div>
   )
 }
