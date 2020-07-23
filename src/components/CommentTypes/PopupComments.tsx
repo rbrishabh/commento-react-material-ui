@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(0),
       display: 'flex',
       flexDirection: 'column',
-      transition: 'width 0.3s ease',
+      transition: 'width 0.3s ease-in-out',
       boxShadow: theme.shadows[5],
       borderRadius: '10px',
       position: 'relative',
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 0,
       left: 0,
       width: '100%',
-      padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`,
+      padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
       paddingBottom: theme.spacing(4),
       background: 'linear-gradient(to bottom, white 55%, rgba(0,0,0,0))',
       zIndex: 10,
@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .label': {
         color: theme.palette.primary.main,
         display: 'inline-block',
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
+        fontSize: '1.2rem',
         flex: 1
       }
     },
@@ -88,7 +91,16 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: 1,
       padding: theme.spacing(2),
       paddingTop: theme.spacing(7),
-      overflowY: 'auto'
+      overflowY: 'auto',
+      '&::-webkit-scrollbar-thumb': {
+        background: 'hsla(0,0%,53.3%,.519)',
+        borderRagius: 10,
+        padding: 4
+      },
+      '&::-webkit-scrollbar ': {
+        width: 5,
+        padding: 10
+      }
     },
     addNewCommentWrapper: {
       padding: `${theme.spacing(1)}px ${theme.spacing(1.5)}px`

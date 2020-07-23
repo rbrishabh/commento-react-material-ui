@@ -26,12 +26,8 @@ interface CommentPageProps {
   width?: number
   commentSystem?: string
   label?: string
+  [key: string]: any
 }
-
-const generateClassName = createGenerateClassName({
-  disableGlobal: true,
-  productionPrefix: 'commento'
-})
 
 const convertArrayToKeyValuePairs = (comments: CommentDetails[]) => {
   return comments.reduce((acc, comment) => {
@@ -81,13 +77,19 @@ const addMarkdownToComments = (comments: CommentDetails[]) =>
 const removeDeletedCommentsWithNoReplies = (comments: CommentDetails[]) =>
   comments.filter(comment => !(comment.deleted && !comment.replies))
 
+const classGenerator = createGenerateClassName({
+  seed: 'commento',
+  productionPrefix: 'commento'
+})
+
 export const CommentsPage: React.FC<CommentPageProps> = ({
   pageId,
   allowOnlyOneRootComment,
   pageType = 'grid',
   width = 0,
   commentSystem,
-  label
+  label,
+  ...restProps
 }) => {
   const [commentsLoaded, setCommentsLoaded] = useState<boolean>(false)
   const [comments, commentDispatch] = useReducer(commentsReducer, {})
@@ -124,12 +126,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
     return pageType === 'popup' ? (
       <img src={LoadingGif} className='loading-gif' />
     ) : (
-      // <div className='comments-page'>
-      //   <div className='commento-alert'>
-      //     Authenticating the user{' '}
       <img src={LoadingGif} className='loading-gif' />
-      // </div>
-      // </div>
     )
   } else if (!isAuthenticated && !isAuthenticating) {
     return (
@@ -151,9 +148,10 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
         commentDispatch
       }}
     >
-      <StylesProvider generateClassName={generateClassName}>
+      <StylesProvider injectFirst generateClassName={classGenerator}>
         {pageType === 'grid' ? (
           <GridComments
+            {...restProps}
             commentValues={commentValues}
             userDetails={userDetails}
             pageId={pageId}
@@ -164,6 +162,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
           />
         ) : pageType === 'popup' ? (
           <PopupComments
+            {...restProps}
             commentSystem={commentSystem}
             width={width}
             commentValues={commentValues}
