@@ -96,7 +96,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         endAdornment: (
           <InputAdornment position='end'>
             <IconButton className='sendIcon' onClick={handleSubmit}>
-              <SendIcon color='inherit' />
+              <SendIcon color='primary' />
             </IconButton>
           </InputAdornment>
         ),
