@@ -148,7 +148,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
         commentDispatch
       }}
     >
-      <StylesProvider injectFirst generateClassName={classGenerator}>
+      <StylesProvider generateClassName={classGenerator}>
         {pageType === 'grid' ? (
           <GridComments
             {...restProps}
