@@ -17,13 +17,15 @@ interface CommentoAuthContextValue {
   commenterToken: string | null
   userDetails: UserDetails
   isAuthenticating: boolean
+  commentoOrigin: string
 }
 
 const CommentoAuthContext = React.createContext<CommentoAuthContextValue>({
   isAuthenticated: false,
   commenterToken: null,
   userDetails: {} as UserDetails,
-  isAuthenticating: false
+  isAuthenticating: false,
+  commentoOrigin: ''
 })
 
 export const useCommentoAuthContext = () => useContext(CommentoAuthContext)
@@ -77,7 +79,8 @@ export const CommnetoAuthProvider: React.FC<CommentoAuthProviderProps> = ({
         isAuthenticated,
         commenterToken,
         userDetails,
-        isAuthenticating
+        isAuthenticating,
+        commentoOrigin
       }}
     >
       {children}

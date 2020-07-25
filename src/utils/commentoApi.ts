@@ -20,12 +20,17 @@ export const ssoAuth = async (
     .then(res => res.data)
   const {
     commenter,
+    email: userSecrets,
     success: selfGetSuccess
   } = await _axios
     .post(`${commentoOrigin}/api/commenter/self`, { commenterToken })
     .then(res => res.data)
   if (authenticationSucess && selfGetSuccess)
-    return { commenterToken, success: true, userDetails: commenter }
+    return {
+      commenterToken,
+      success: true,
+      userDetails: { ...commenter, ...userSecrets }
+    }
   return { success: false }
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import Comment from '../Comment'
 import { AddNewCommnet } from '../CommentsPage/AddNewComment'
 import LoadingGif from '../../assets/loading.gif'
@@ -6,6 +6,8 @@ import { CommentDetails } from '../../interfaces'
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import { animateScroll } from 'react-scroll'
 import { ArrowExpand, ArrowShrink, Cross } from './Icons'
+import SettingsIcon from '@material-ui/icons/Settings'
+import { useCommentoAuthContext } from '../CommentoAuthContext'
 
 interface CommentPageProps {
   pageId: string
@@ -128,7 +130,10 @@ const PopupComments: React.FC<CommentPageProps> = ({
   onClose
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  commentValues = commentValues.reverse()
+  const reversedCommentValues = useMemo(() => commentValues.reverse(), [
+    commentValues
+  ])
+  const { commentoOrigin } = useCommentoAuthContext()
   const classes = useStyles({ width, isExpanded, expandedWidth })
   useEffect(() => {
     if (commentsLoaded) scrollToBottom()
@@ -136,12 +141,22 @@ const PopupComments: React.FC<CommentPageProps> = ({
 
   const expandPopUp = () => setIsExpanded(true)
   const shrinkPopUp = () => setIsExpanded(false)
-
+  const redirectToCommentoSettings = useCallback(
+    () =>
+      window.open(
+        `${commentoOrigin}/unsubscribe?unsubscribeSecretHex=${userDetails.unsubscribeSecretHex}`,
+        '_blank'
+      ),
+    []
+  )
   return (
     <div className={classes.root}>
       <div className={classes.popupHeader}>
         <span className='label'>{label}</span>
         <div className={classes.headerActions}>
+          <span className='actionBtn' onClick={redirectToCommentoSettings}>
+            <SettingsIcon color='primary' />
+          </span>
           <span
             className='actionBtn'
             onClick={isExpanded ? shrinkPopUp : expandPopUp}
@@ -156,15 +171,17 @@ const PopupComments: React.FC<CommentPageProps> = ({
       <div id='scrollToRoot' className={classes.commentsContainer}>
         {commentsLoaded ? (
           <React.Fragment>
-            {commentValues.map((comment: CommentDetails, index: number) => (
-              <Comment
-                commentSystem={commentSystem}
-                key={comment.commentHex}
-                pageType={pageType}
-                commentDetails={comment}
-                hideDivider={index === 0}
-              />
-            ))}
+            {reversedCommentValues.map(
+              (comment: CommentDetails, index: number) => (
+                <Comment
+                  commentSystem={commentSystem}
+                  key={comment.commentHex}
+                  pageType={pageType}
+                  commentDetails={comment}
+                  hideDivider={index === 0}
+                />
+              )
+            )}
           </React.Fragment>
         ) : (
           <div style={{ marginTop: '1rem' }}>
@@ -175,7 +192,7 @@ const PopupComments: React.FC<CommentPageProps> = ({
           </div>
         )}
       </div>
-      {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
+      {reversedCommentValues.length > 0 && allowOnlyOneRootComment ? null : (
         <div className={classes.addNewCommentWrapper}>
           <AddNewCommnet
             scrollToBottom={scrollToBottom}
