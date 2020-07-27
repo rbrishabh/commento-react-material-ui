@@ -12,12 +12,23 @@ import {
   MenuItem,
   ListItemText,
   Button,
-  ListItemIcon
+  ListItemIcon,
+  Theme,
+  makeStyles
 } from '@material-ui/core'
 
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteFilledIcon from '@material-ui/icons/Delete'
+
+const useStyles = makeStyles((theme: Theme) => ({
+  unlikeButton: {
+    color: theme.palette.primary.main
+  },
+  likeButton: {
+    color: 'grey'
+  }
+}))
 
 interface CommentActionsProps {
   commentHex: string
@@ -33,54 +44,51 @@ interface CommentActionsProps {
   likedState: number
 }
 
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5'
+  }
+})((props: any) => (
+  <Menu
+    elevation={0}
+    open={props.open}
+    autoFocus={false}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center'
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center'
+    }}
+    {...props}
+  />
+))
+
+const StyledMenuItem = withStyles(theme => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white
+      }
+    }
+  }
+}))(MenuItem)
+
 export const CommentActions: React.FC<CommentActionsProps> = ({
   commentHex,
-  // onCollapseClick,
   onEditClick,
   isOwnComment,
   onReplyClick,
-  // repliesCollapsed,
   pageType,
-  // commentSystem,
   isHovered,
   isReply,
   likedState
 }) => {
+  const classes = useStyles()
   const { commentDispatch } = useCommentPageContext()
-  // console.log(onCollapseClick, repliesCollapsed, commentSystem, pageType)
-
-  const StyledMenu = withStyles({
-    paper: {
-      border: '1px solid #d3d4d5'
-    }
-  })((props: any) => (
-    <Menu
-      elevation={0}
-      open={props.open}
-      autoFocus={false}
-      getContentAnchorEl={null}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center'
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'center'
-      }}
-      {...props}
-    />
-  ))
-
-  const StyledMenuItem = withStyles(theme => ({
-    root: {
-      '&:focus': {
-        backgroundColor: theme.palette.primary.main,
-        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-          color: theme.palette.common.white
-        }
-      }
-    }
-  }))(MenuItem)
 
   const upvoteComment = useCallback(async () => {
     handleCloseSettings()
@@ -126,66 +134,61 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
 
   return (
     <div className='commentActions'>
-      {
-        !isOwnComment ? (
-          <React.Fragment>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                marginRight: pageType === 'popup' ? '10px' : '30px'
-                // marginTop: pageType === 'popup' ? '10px' : '30px'
-              }}
-            >
-              <div style={{ display: 'flex', color: 'grey' }}>
-                {isHovered ? (
-                  <React.Fragment>
-                    {likedState === 0 && (
-                      <Button
-                        style={{ color: 'grey' }}
-                        size='small'
-                        onClick={upvoteComment}
-                      >
-                        <ThumbUpAltIcon fontSize='small' color='inherit' /> Like
-                      </Button>
-                    )}
-                    {likedState === 1 && (
-                      <Button
-                        style={{ color: 'grey' }}
-                        size='small'
-                        onClick={downvoteComment}
-                      >
-                        <ThumbDownAltIcon fontSize='small' color='inherit' />{' '}
-                        Unlike
-                      </Button>
-                    )}
+      {!isOwnComment ? (
+        <React.Fragment>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              marginRight: pageType === 'popup' ? '10px' : '30px'
+              // marginTop: pageType === 'popup' ? '10px' : '30px'
+            }}
+          >
+            <div style={{ display: 'flex', color: 'grey' }}>
+              {isHovered ? (
+                <React.Fragment>
+                  {likedState === 0 && (
+                    <Button
+                      className={classes.likeButton}
+                      size='small'
+                      onClick={upvoteComment}
+                    >
+                      <ThumbUpAltIcon fontSize='small' color='inherit' /> Like
+                    </Button>
+                  )}
+                  {likedState === 1 && (
+                    <Button
+                      className={classes.unlikeButton}
+                      size='small'
+                      onClick={downvoteComment}
+                    >
+                      <ThumbDownAltIcon fontSize='small' color='inherit' />{' '}
+                      Unlike
+                    </Button>
+                  )}
 
-                    {!isReply ? (
-                      <Button
-                        style={{ color: 'grey' }}
-                        size='small'
-                        onClick={onReplyClick}
-                      >
-                        <ReplyIcon fontSize='small' color='inherit' />
-                        Reply
-                      </Button>
-                    ) : (
-                      ''
-                    )}
-                  </React.Fragment>
-                ) : (
-                  <div style={{ padding: '15px' }} />
-                )}
-              </div>
+                  {!isReply ? (
+                    <Button
+                      style={{ color: 'grey' }}
+                      size='small'
+                      onClick={onReplyClick}
+                    >
+                      <ReplyIcon fontSize='small' color='inherit' />
+                      Reply
+                    </Button>
+                  ) : (
+                    ''
+                  )}
+                </React.Fragment>
+              ) : (
+                <div style={{ padding: '15px' }} />
+              )}
             </div>
-          </React.Fragment>
-        ) : (
-          ''
-        )
-        // ) : (
-        //   ''
-        // )
-      }
+          </div>
+        </React.Fragment>
+      ) : (
+        ''
+      )}
       {isOwnComment ? (
         <React.Fragment>
           <Button
@@ -225,7 +228,6 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
           </StyledMenu>
         </React.Fragment>
       ) : (
-        // )
         ''
       )}
     </div>
