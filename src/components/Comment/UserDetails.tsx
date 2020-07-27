@@ -35,7 +35,9 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
           {commentSystem && commentSystem === 'personal' ? (
             ''
           ) : (
-            <span className='votes'>{commentData.score} Likes | </span>
+            <span className='votes'>
+              {commentData.score} {commentData.score === 1 ? 'Like' : 'Likes'} |{' '}
+            </span>
           )}
           <span className='date'>
             {moment(commentData.creationDate).fromNow()}
