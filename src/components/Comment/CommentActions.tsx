@@ -162,8 +162,7 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
                       size='small'
                       onClick={downvoteComment}
                     >
-                      <ThumbDownAltIcon fontSize='small' color='inherit' />{' '}
-                      Unlike
+                      <ThumbUpAltIcon fontSize='small' color='inherit' /> Like
                     </Button>
                   )}
 
