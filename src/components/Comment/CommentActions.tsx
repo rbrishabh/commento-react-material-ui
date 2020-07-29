@@ -3,7 +3,7 @@ import { useCommentPageContext } from '../CommentsPage/CommentPageContext'
 import { voteComment, deleteComment } from '../../utils/commentoApi'
 import { CommentPageActions } from '../CommentsPage/CommentPageReducer'
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt'
-import ThumbDownAltIcon from '@material-ui/icons/ThumbDownAlt'
+// import ThumbDownAltIcon from '@material-ui/icons/ThumbDownAlt'
 import ReplyIcon from '@material-ui/icons/Reply'
 
 import {
@@ -162,8 +162,7 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
                       size='small'
                       onClick={downvoteComment}
                     >
-                      <ThumbDownAltIcon fontSize='small' color='inherit' />{' '}
-                      Unlike
+                      <ThumbUpAltIcon fontSize='small' color='inherit' /> Like
                     </Button>
                   )}
 
