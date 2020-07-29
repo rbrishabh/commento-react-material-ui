@@ -107,18 +107,26 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
   )
 
   useEffect(() => {
+    let isMounted = true
     if (isAuthenticated) {
       const getComments = async () => {
         // get comments usins the commentoProvider
         const { comments, commenters } = await fetchComments(pageId)
-        setCommentors(commenters)
-        commentDispatch({
-          type: CommentPageActions.COMMENTS_LOADED,
-          payload: convertArrayToKeyValuePairs(addMarkdownToComments(comments))
-        })
-        setCommentsLoaded(true)
+        if (isMounted) {
+          setCommentors(commenters)
+          commentDispatch({
+            type: CommentPageActions.COMMENTS_LOADED,
+            payload: convertArrayToKeyValuePairs(
+              addMarkdownToComments(comments)
+            )
+          })
+          setCommentsLoaded(true)
+        }
       }
       getComments()
+    }
+    return () => {
+      isMounted = false
     }
   }, [pageId, isAuthenticated])
 

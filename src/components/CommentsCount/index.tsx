@@ -20,15 +20,21 @@ export const CommentsCount: React.FC<CommentsCountProps> = ({
   const [commentsLength, setcommentsLength] = useState(0)
   const { isAuthenticated, isAuthenticating } = useCommentoAuthContext()
   useEffect(() => {
+    let isMouted = true
     if (isAuthenticated) {
       const getComments = async () => {
         // get comments usins the commentoProvider
         let { comments } = await fetchComments(pageId)
         comments = comments.filter(comment => !comment.deleted)
-        setcommentsLength(comments.length)
-        setCommentsLoaded(true)
+        if (isMouted) {
+          setcommentsLength(comments.length)
+          setCommentsLoaded(true)
+        }
       }
       getComments()
+    }
+    return () => {
+      isMouted = false
     }
   }, [pageId, isAuthenticated])
 
