@@ -155,18 +155,25 @@
 .commentActions button:not(:first-child) {
   margin-left: 10px;
 }
-
+.edit-comment-box {
+  padding: 0 1rem;
+  padding-bottom: 1rem;
+}
 .edit-comment-box textarea {
   display: block;
   width: 100%;
-  border-radius: 1rem 0 1rem 0;
-  border: 1px solid #2e538ea4;
+  border-radius: 1rem;
+  border: none;
   background: #f8f9fd;
   min-height: 40px;
   margin-bottom: 1rem;
   outline: none;
   padding: 1rem;
   font-family: inherit;
+}
+
+.edit-comment-box:hover textarea {
+  background: #fff;
 }
 
 .edit-comment-box-pop {
