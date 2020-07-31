@@ -17,9 +17,13 @@ export const EditComment: React.FC<EditCommentProps> = ({
     commentDetails.markdown
   )
   const { commentDispatch } = useCommentPageContext()
+
   const handleSubmit = useCallback(async () => {
     if (!commentBody) return
-    const { comment } = await updateComment(commentDetails, commentBody)
+    const { comment } = await updateComment({
+      commentDetails,
+      newCommentBody: commentBody
+    })
     // console.log('handleSubmit -> comment', comment)
     commentDispatch({
       payload: comment,

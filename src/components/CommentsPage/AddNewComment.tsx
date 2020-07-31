@@ -1,5 +1,9 @@
 import React, { useCallback, useState } from 'react'
-import { addNewComment, addReplyToComment } from '../../utils/commentoApi'
+import {
+  addNewComment,
+  addReplyToComment,
+  CommentsPageResponse
+} from '../../utils/commentoApi'
 import { useCommentPageContext } from './CommentPageContext'
 import { CommentPageActions } from './CommentPageReducer'
 import IconButton from '@material-ui/core/IconButton'
@@ -7,6 +11,8 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import SendIcon from '@material-ui/icons/Send'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core'
+import { useMutation, queryCache } from 'react-query'
+import { produce } from 'immer'
 
 const useInputClasses = makeStyles(_theme => ({
   root: {
@@ -45,13 +51,61 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
   userData,
   isReply = false
 }) => {
-  // console.log(userData)
   const [commentBody, setCommentBody] = useState<string>('')
   const { commentDispatch, currentCommenterDetails } = useCommentPageContext()
+  const [addReplyToCommentMutation] = useMutation(addReplyToComment, {
+    onMutate: () => {
+      queryCache.cancelQueries(pageId)
+      const oldCommentsPageData = queryCache.getQueryData(pageId)
+      console.log('oldCommentsPageData', oldCommentsPageData)
+
+      queryCache.setQueryData(pageId, (pageData: CommentsPageResponse) => {
+        const newPageData = produce(pageData, draftPageData => {
+          draftPageData.totalUndeletedComments += 1
+        })
+        console.log('newPageData', newPageData)
+        return newPageData
+      })
+
+      return oldCommentsPageData
+    },
+    // On failure, roll back to the previous value
+    onError: (_err, _variables, previousValue) =>
+      queryCache.setQueryData(pageId, previousValue),
+    // After success or failure, refetch the todos query
+    onSettled: () => {
+      queryCache.invalidateQueries(pageId)
+    }
+  })
+  const [addNewCommentMutation] = useMutation(addNewComment, {
+    onMutate: () => {
+      queryCache.cancelQueries(pageId)
+      const oldCommentsPageData = queryCache.getQueryData(pageId)
+      console.log('oldCommentsPageData', oldCommentsPageData)
+
+      queryCache.setQueryData(pageId, (pageData: CommentsPageResponse) => {
+        const newPageData = produce(pageData, draftPageData => {
+          draftPageData.totalUndeletedComments += 1
+        })
+        console.log('newPageData', newPageData)
+        return newPageData
+      })
+
+      return oldCommentsPageData
+    },
+    // On failure, roll back to the previous value
+    onError: (_err, _variables, previousValue) =>
+      queryCache.setQueryData(pageId, previousValue),
+    // After success or failure, refetch the todos query
+    onSettled: () => {
+      queryCache.invalidateQueries(pageId)
+    }
+  })
+
   const handleSubmit = useCallback(async () => {
     if (!commentBody) return
     if (parentHex) {
-      const { comment: newComment } = await addReplyToComment({
+      const { comment: newComment } = await addReplyToCommentMutation({
         commentMarkdown: commentBody,
         path: pageId,
         parentHex,
@@ -62,7 +116,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         payload: newComment
       })
     } else {
-      const { comment: newComment } = await addNewComment({
+      const { comment: newComment } = await addNewCommentMutation({
         commentMarkdown: commentBody,
         path: pageId,
         commenterHex: currentCommenterDetails.commenterHex

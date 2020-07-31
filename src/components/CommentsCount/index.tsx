@@ -1,15 +1,18 @@
 import React, { useState, useEffect, ReactNode } from 'react'
 import { useCommentoAuthContext } from '../CommentoAuthContext'
-import { fetchComments } from '../../utils/commentoApi'
+import { fetchComments, CommentsPageResponse } from '../../utils/commentoApi'
+import { useQuery } from 'react-query'
 
 interface CommentsCountProps {
   pageId: string
-  children: (
-    commentsLength: number,
-    commentsLoaded: Boolean,
-    isAuthenticated: Boolean,
-    isAuthenticating: Boolean
-  ) => ReactNode
+  children: (renderProps: RenderProps) => ReactNode
+}
+
+interface RenderProps {
+  commentsLength: number
+  commentsLoaded: boolean
+  isAuthenticated: boolean
+  isAuthenticating: boolean
 }
 
 export const CommentsCount: React.FC<CommentsCountProps> = ({
@@ -19,33 +22,31 @@ export const CommentsCount: React.FC<CommentsCountProps> = ({
   const [commentsLoaded, setCommentsLoaded] = useState<boolean>(false)
   const [commentsLength, setcommentsLength] = useState(0)
   const { isAuthenticated, isAuthenticating } = useCommentoAuthContext()
+  const {
+    isLoading: areCommentsLoading,
+    data: commentsResponse,
+    isIdle: isCommentsRequestidle
+  } = useQuery(pageId, fetchComments, { enabled: isAuthenticated })
+
   useEffect(() => {
-    let isMouted = true
-    if (isAuthenticated) {
-      const getComments = async () => {
-        // get comments usins the commentoProvider
-        let { comments } = await fetchComments(pageId)
-        comments = comments.filter(comment => !comment.deleted)
-        if (isMouted) {
-          setcommentsLength(comments.length)
-          setCommentsLoaded(true)
-        }
-      }
-      getComments()
+    let isMounted = true
+    if (areCommentsLoading || isCommentsRequestidle)
+      return setCommentsLoaded(false)
+    const { totalUndeletedComments } = commentsResponse as CommentsPageResponse
+    if (isMounted) {
+      setcommentsLength(totalUndeletedComments)
+      setCommentsLoaded(true)
     }
     return () => {
-      isMouted = false
+      isMounted = false
     }
-  }, [pageId, isAuthenticated])
+  }, [areCommentsLoading, isCommentsRequestidle, commentsResponse])
 
-  return (
-    <div>
-      {children(
-        commentsLength,
-        commentsLoaded,
-        isAuthenticated,
-        isAuthenticating
-      )}
-    </div>
-  )
+  const renderProps = {
+    commentsLength,
+    commentsLoaded,
+    isAuthenticated,
+    isAuthenticating
+  } as RenderProps
+  return <div>{children(renderProps)}</div>
 }

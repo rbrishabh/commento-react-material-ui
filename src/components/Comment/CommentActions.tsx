@@ -1,6 +1,10 @@
 import React, { useCallback } from 'react'
 import { useCommentPageContext } from '../CommentsPage/CommentPageContext'
-import { voteComment, deleteComment } from '../../utils/commentoApi'
+import {
+  voteComment,
+  deleteComment,
+  CommentsPageResponse
+} from '../../utils/commentoApi'
 import { CommentPageActions } from '../CommentsPage/CommentPageReducer'
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt'
 // import ThumbDownAltIcon from '@material-ui/icons/ThumbDownAlt'
@@ -20,6 +24,8 @@ import {
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteFilledIcon from '@material-ui/icons/Delete'
+import { useMutation, queryCache } from 'react-query'
+import produce from 'immer'
 
 const useStyles = makeStyles((theme: Theme) => ({
   unlikeButton: {
@@ -88,8 +94,31 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
   likedState
 }) => {
   const classes = useStyles()
-  const { commentDispatch } = useCommentPageContext()
+  const { commentDispatch, pageId } = useCommentPageContext()
+  const [deleteCommentMutation] = useMutation(deleteComment, {
+    onMutate: () => {
+      queryCache.cancelQueries(pageId)
+      const oldCommentsPageData = queryCache.getQueryData(pageId)
+      console.log('oldCommentsPageData', oldCommentsPageData)
 
+      queryCache.setQueryData(pageId, (pageData: CommentsPageResponse) => {
+        const newPageData = produce(pageData, draftPageData => {
+          draftPageData.totalUndeletedComments -= 1
+        })
+        console.log('newPageData', newPageData)
+        return newPageData
+      })
+
+      return oldCommentsPageData
+    },
+    // On failure, roll back to the previous value
+    onError: (_err, _variables, previousValue) =>
+      queryCache.setQueryData(pageId, previousValue),
+    // After success or failure, refetch the todos query
+    onSettled: () => {
+      queryCache.invalidateQueries(pageId)
+    }
+  })
   const upvoteComment = useCallback(async () => {
     handleCloseSettings()
     await voteComment(1, commentHex)
@@ -114,7 +143,7 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
 
   const handleDeleteComment = useCallback(async () => {
     handleCloseSettings()
-    await deleteComment(commentHex)
+    await deleteCommentMutation(commentHex)
     commentDispatch({
       type: CommentPageActions.DELETE_COMMENT,
       payload: {

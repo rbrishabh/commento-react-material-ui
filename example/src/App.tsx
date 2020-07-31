@@ -15,23 +15,6 @@ const App = () => {
         ssoToken={dummyAuthToken}
       >
         <Comments />
-        {/* <CommentsCountLib
-          pageId={`2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization`}
-        >
-          {(
-            personalNotesCount,
-            personalNotesDataLoaded,
-            isAuthenticated,
-            isAuthenticating
-          ) => (
-            <div style={{ marginTop: '200px' }}>
-              {personalNotesCount}
-              {personalNotesDataLoaded}
-              {isAuthenticating}
-              {isAuthenticated}
-            </div>
-          )}
-        </CommentsCountLib> */}
       </CommnetoAuthProvider>
     </div>
   )

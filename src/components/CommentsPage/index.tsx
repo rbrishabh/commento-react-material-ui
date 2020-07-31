@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { useState, useEffect, useReducer, useMemo } from 'react'
 import { CommentDetails, UserDetails } from '../../interfaces'
 import { useCommentoAuthContext } from '../CommentoAuthContext'
 import { CommentPageContext } from './CommentPageContext'
 import {
   fetchComments,
   sortCommentByCreationDate,
-  CommentSortTypes
+  CommentSortTypes,
+  CommentsPageResponse
 } from '../../utils/commentoApi'
 import GridComments from '../CommentTypes/GridComments'
 import PopupComments from '../CommentTypes/PopupComments'
@@ -17,6 +18,7 @@ import {
   StylesProvider,
   createGenerateClassName
 } from '@material-ui/core/styles'
+import { useQuery } from 'react-query'
 
 interface CommentPageProps {
   pageId: string
@@ -70,7 +72,8 @@ const mergeRepliesToRootComments = (comments: {
 
 const addMarkdownToComments = (comments: CommentDetails[]) =>
   comments.map(comment => {
-    comment.markdown = turndownService.turndown(comment.html)
+    if (!comment.markdown)
+      comment.markdown = turndownService.turndown(comment.html)
     return comment
   })
 
@@ -99,36 +102,43 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
     userDetails,
     isAuthenticating
   } = useCommentoAuthContext()
-  const commentValues = sortCommentByCreationDate(
-    CommentSortTypes.desc,
-    removeDeletedCommentsWithNoReplies(
-      Object.values(mergeRepliesToRootComments(comments))
-    )
+  const {
+    isLoading: areCommentsLoading,
+    data: commentsResponse,
+    isIdle: isCommentsRequestidle
+  } = useQuery(pageId, fetchComments, {
+    enabled: isAuthenticated
+  })
+
+  const commentValues = useMemo(
+    () =>
+      sortCommentByCreationDate(
+        CommentSortTypes.desc,
+        removeDeletedCommentsWithNoReplies(
+          Object.values(mergeRepliesToRootComments(comments))
+        )
+      ),
+    [comments]
   )
 
   useEffect(() => {
     let isMounted = true
-    if (isAuthenticated) {
-      const getComments = async () => {
-        // get comments usins the commentoProvider
-        const { comments, commenters } = await fetchComments(pageId)
-        if (isMounted) {
-          setCommentors(commenters)
-          commentDispatch({
-            type: CommentPageActions.COMMENTS_LOADED,
-            payload: convertArrayToKeyValuePairs(
-              addMarkdownToComments(comments)
-            )
-          })
-          setCommentsLoaded(true)
-        }
-      }
-      getComments()
+    if (areCommentsLoading || isCommentsRequestidle)
+      return setCommentsLoaded(false)
+    if (isMounted) {
+      const { commenters, comments } = commentsResponse as CommentsPageResponse
+      console.log('convertArrayToKeyValuePairs -> comments', comments)
+      setCommentors(commenters)
+      commentDispatch({
+        type: CommentPageActions.COMMENTS_LOADED,
+        payload: convertArrayToKeyValuePairs(addMarkdownToComments(comments))
+      })
+      setCommentsLoaded(true)
     }
     return () => {
       isMounted = false
     }
-  }, [pageId, isAuthenticated])
+  }, [areCommentsLoading, isCommentsRequestidle, commentsResponse])
 
   if (isAuthenticating) {
     return pageType === 'popup' ? (
@@ -147,7 +157,6 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
   }
 
   return (
-    // Pass dispatch for useReducer in the provider value so that CommentActions can dispatch action to modify a particular comment
     <CommentPageContext.Provider
       value={{
         pageId,

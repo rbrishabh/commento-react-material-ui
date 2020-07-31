@@ -44,9 +44,15 @@ export const getSelfDetails = async (commenterToken: string) => {
   return { success }
 }
 
+export interface CommentsPageResponse {
+  comments: CommentDetails[]
+  commenters: UserDetails[]
+  totalUndeletedComments: number
+}
+
 export const fetchComments = async (
   pageId: string
-): Promise<{ comments: CommentDetails[]; commenters: UserDetails[] }> => {
+): Promise<CommentsPageResponse> => {
   const axios = getAxiosInstance()
   const { comments, commenters } = await axios
     .post('/api/comment/list', {
@@ -54,7 +60,13 @@ export const fetchComments = async (
       ...axios.defaults.data
     })
     .then(res => res.data)
-  return { commenters, comments }
+  return {
+    commenters,
+    comments,
+    totalUndeletedComments: comments.filter(
+      (comment: CommentDetails) => !comment.deleted
+    ).length
+  }
 }
 
 export const voteComment = async (direction: number, commentHex: string) => {
@@ -80,10 +92,18 @@ export const deleteComment = async (commentHex: string) => {
   return success
 }
 
-export const updateComment = async (
-  commentDetails: CommentDetails,
+export interface UpdateCommentArguments {
+  commentDetails: CommentDetails
   newCommentBody: string
-): Promise<{ comment?: CommentDetails; success: boolean }> => {
+}
+
+export const updateComment = async ({
+  commentDetails,
+  newCommentBody
+}: UpdateCommentArguments): Promise<{
+  comment?: CommentDetails
+  success: boolean
+}> => {
   const axios = getAxiosInstance()
   const { html, success } = await axios
     .post('/api/comment/edit', {
