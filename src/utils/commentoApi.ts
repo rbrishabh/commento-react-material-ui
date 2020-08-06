@@ -69,6 +69,54 @@ export const fetchComments = async (
   }
 }
 
+export interface CommentCountResponse {
+  success: boolean
+  commentCount: number
+}
+
+export const getCommentCount = async (
+  pageId: string
+): Promise<CommentCountResponse | { success: boolean }> => {
+  const axios = getAxiosInstance()
+
+  const { commentCounts, success } = await axios
+    .post('/api/comment/count', {
+      paths: [pageId],
+      ...axios.defaults.data
+    })
+    .then(res => res.data)
+
+  if (!success) {
+    return { success }
+  }
+
+  return { success, commentCount: commentCounts[pageId] }
+}
+
+export interface CommentsCountsResponse {
+  success: boolean
+  commentCounts?: { [pageId: string]: number }
+}
+
+export const getCommentsCounts = async (
+  pageIds: string[]
+): Promise<CommentsCountsResponse> => {
+  const axios = getAxiosInstance()
+
+  const { commentCounts, success } = await axios
+    .post('/api/comment/count', {
+      paths: pageIds,
+      ...axios.defaults.data
+    })
+    .then(res => res.data)
+
+  if (!success) {
+    return { success }
+  }
+
+  return { success, commentCounts }
+}
+
 export const voteComment = async (direction: number, commentHex: string) => {
   const axios = getAxiosInstance()
   const { success } = await axios

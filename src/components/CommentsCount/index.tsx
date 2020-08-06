@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactNode } from 'react'
 import { useCommentoAuthContext } from '../CommentoAuthContext'
-import { fetchComments, CommentsPageResponse } from '../../utils/commentoApi'
+import { getCommentCount, CommentCountResponse } from '../../utils/commentoApi'
 import { useQuery } from 'react-query'
 
 interface CommentsCountProps {
@@ -26,15 +26,15 @@ export const CommentsCount: React.FC<CommentsCountProps> = ({
     isLoading: areCommentsLoading,
     data: commentsResponse,
     isIdle: isCommentsRequestidle
-  } = useQuery(pageId, fetchComments, { enabled: isAuthenticated })
+  } = useQuery(pageId, getCommentCount, { enabled: isAuthenticated })
 
   useEffect(() => {
     let isMounted = true
     if (areCommentsLoading || isCommentsRequestidle)
       return setCommentsLoaded(false)
-    const { totalUndeletedComments } = commentsResponse as CommentsPageResponse
-    if (isMounted) {
-      setcommentsLength(totalUndeletedComments)
+    const { commentCount, success } = commentsResponse as CommentCountResponse
+    if (isMounted && success) {
+      setcommentsLength(commentCount)
       setCommentsLoaded(true)
     }
     return () => {
