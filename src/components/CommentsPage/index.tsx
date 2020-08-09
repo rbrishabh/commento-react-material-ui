@@ -85,6 +85,9 @@ const classGenerator = createGenerateClassName({
   productionPrefix: 'commento'
 })
 
+const _fetchComments = async (_key: string, pageId: string) =>
+  await fetchComments(pageId)
+
 export const CommentsPage: React.FC<CommentPageProps> = ({
   pageId,
   allowOnlyOneRootComment,
@@ -106,7 +109,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
     isLoading: areCommentsLoading,
     data: commentsResponse,
     isIdle: isCommentsRequestidle
-  } = useQuery(pageId, fetchComments, {
+  } = useQuery(['fetchComments', pageId], _fetchComments, {
     enabled: isAuthenticated
   })
 
@@ -127,7 +130,6 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
       return setCommentsLoaded(false)
     if (isMounted) {
       const { commenters, comments } = commentsResponse as CommentsPageResponse
-      console.log('convertArrayToKeyValuePairs -> comments', comments)
       setCommentors(commenters)
       commentDispatch({
         type: CommentPageActions.COMMENTS_LOADED,

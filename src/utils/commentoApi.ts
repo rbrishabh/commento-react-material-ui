@@ -95,7 +95,7 @@ export const getCommentCount = async (
 
 export interface CommentsCountsResponse {
   success: boolean
-  commentCounts?: { [pageId: string]: number }
+  commentCounts: { [pageId: string]: number }
 }
 
 export const getCommentsCounts = async (
@@ -111,7 +111,7 @@ export const getCommentsCounts = async (
     .then(res => res.data)
 
   if (!success) {
-    return { success }
+    return { success, commentCounts: {} }
   }
 
   return { success, commentCounts }

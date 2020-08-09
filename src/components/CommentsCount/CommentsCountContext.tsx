@@ -6,11 +6,12 @@ import { useCommentoAuthContext } from '../CommentoAuthContext'
 interface CommentCountContextProps {
   commentCounts?: { [pageId: string]: number }
   loading: boolean
+  queryKey: any
 }
 
 interface CommentCountContextProviderProps {
   pageIds: Array<string>
-  children: React.ReactChild
+  children: any
 }
 
 const _getCommentsCounts = async (_key: string, pageIds: string[]) =>
@@ -18,8 +19,10 @@ const _getCommentsCounts = async (_key: string, pageIds: string[]) =>
 
 const CommentCountContext = React.createContext<CommentCountContextProps>({
   commentCounts: {},
-  loading: false
+  loading: false,
+  queryKey: ''
 })
+
 export const useCommentsCountContext = () => useContext(CommentCountContext)
 export const CommentsCountContextProvider: React.FC<CommentCountContextProviderProps> = ({
   pageIds,
@@ -27,15 +30,17 @@ export const CommentsCountContextProvider: React.FC<CommentCountContextProviderP
 }) => {
   const { isAuthenticated } = useCommentoAuthContext()
   const { data, isLoading, isIdle, isError } = useQuery(
-    ['commentCounts', pageIds],
+    ['commentsCount', pageIds],
     _getCommentsCounts,
     { enabled: isAuthenticated }
   )
+
   return (
     <CommentCountContext.Provider
       value={{
         commentCounts: data?.commentCounts,
-        loading: isIdle || isLoading || isError
+        loading: isIdle || isLoading || isError,
+        queryKey: ['commentsCount', pageIds]
       }}
     >
       {children}

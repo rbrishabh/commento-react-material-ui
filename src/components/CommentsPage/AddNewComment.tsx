@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import {
   addNewComment,
   addReplyToComment,
-  CommentsPageResponse
+  CommentsPageResponse,
+  CommentsCountsResponse
 } from '../../utils/commentoApi'
 import { useCommentPageContext } from './CommentPageContext'
 import { CommentPageActions } from './CommentPageReducer'
@@ -13,6 +14,7 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core'
 import { useMutation, queryCache } from 'react-query'
 import { produce } from 'immer'
+import { useCommentsCountContext } from '../CommentsCount'
 
 const useInputClasses = makeStyles(_theme => ({
   root: {
@@ -53,54 +55,71 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
 }) => {
   const [commentBody, setCommentBody] = useState<string>('')
   const { commentDispatch, currentCommenterDetails } = useCommentPageContext()
-  const [addReplyToCommentMutation] = useMutation(addReplyToComment, {
-    onMutate: () => {
-      queryCache.cancelQueries(pageId)
-      const oldCommentsPageData = queryCache.getQueryData(pageId)
-      console.log('oldCommentsPageData', oldCommentsPageData)
+  const { queryKey: commentsCountQueryKey } = useCommentsCountContext()
+  const queryConfig = useMemo(
+    () => ({
+      onMutate: () => {
+        queryCache.cancelQueries(['fetchComments', pageId], { exact: true })
+        queryCache.cancelQueries(commentsCountQueryKey, { exact: true })
 
-      queryCache.setQueryData(pageId, (pageData: CommentsPageResponse) => {
-        const newPageData = produce(pageData, draftPageData => {
-          draftPageData.totalUndeletedComments += 1
-        })
-        console.log('newPageData', newPageData)
-        return newPageData
-      })
+        const oldCommentsPageData = queryCache.getQueryData([
+          'fetchComments',
+          pageId
+        ])
+        const oldCommentsCountData = queryCache.getQueryData(
+          commentsCountQueryKey
+        )
+        console.log('oldCommentsCountData', oldCommentsCountData)
 
-      return oldCommentsPageData
-    },
-    // On failure, roll back to the previous value
-    onError: (_err, _variables, previousValue) =>
-      queryCache.setQueryData(pageId, previousValue),
-    // After success or failure, refetch the todos query
-    onSettled: () => {
-      queryCache.invalidateQueries(pageId)
-    }
-  })
-  const [addNewCommentMutation] = useMutation(addNewComment, {
-    onMutate: () => {
-      queryCache.cancelQueries(pageId)
-      const oldCommentsPageData = queryCache.getQueryData(pageId)
-      console.log('oldCommentsPageData', oldCommentsPageData)
+        queryCache.setQueryData(
+          ['fetchComments', pageId],
+          (pageData: CommentsPageResponse) => {
+            const newPageData = produce(pageData, draftPageData => {
+              draftPageData.totalUndeletedComments += 1
+            })
+            return newPageData
+          },
+          { exact: true }
+        )
 
-      queryCache.setQueryData(pageId, (pageData: CommentsPageResponse) => {
-        const newPageData = produce(pageData, draftPageData => {
-          draftPageData.totalUndeletedComments += 1
-        })
-        console.log('newPageData', newPageData)
-        return newPageData
-      })
+        queryCache.setQueryData(
+          commentsCountQueryKey,
+          (commentsCountData: CommentsCountsResponse) => {
+            return produce(commentsCountData, draftData => {
+              if (!draftData?.commentCounts[pageId]) {
+                draftData.commentCounts[pageId] = 1
+                return
+              }
+              draftData.commentCounts[pageId] += 1
+            })
+          }
+        )
 
-      return oldCommentsPageData
-    },
-    // On failure, roll back to the previous value
-    onError: (_err, _variables, previousValue) =>
-      queryCache.setQueryData(pageId, previousValue),
-    // After success or failure, refetch the todos query
-    onSettled: () => {
-      queryCache.invalidateQueries(pageId)
-    }
-  })
+        return { oldCommentsPageData, oldCommentsCountData }
+      },
+      // On failure, roll back to the previous value
+      onError: (
+        _err: any,
+        _variables: any,
+        { oldCommentsPageData, oldCommentsCountData }: any
+      ) => {
+        queryCache.setQueryData(['fetchComments', pageId], oldCommentsPageData)
+        queryCache.setQueryData(commentsCountQueryKey, oldCommentsCountData)
+      },
+      // After success or failure, refetch the todos query
+      onSettled: () => {
+        queryCache.invalidateQueries(['fetchComments', pageId])
+        queryCache.invalidateQueries(commentsCountQueryKey)
+      }
+    }),
+    [commentsCountQueryKey, pageId]
+  )
+  const [addReplyToCommentMutation] = useMutation(
+    addReplyToComment,
+    queryConfig
+  )
+
+  const [addNewCommentMutation] = useMutation(addNewComment, queryConfig)
 
   const handleSubmit = useCallback(async () => {
     if (!commentBody) return

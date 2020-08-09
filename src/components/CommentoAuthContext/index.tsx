@@ -51,7 +51,8 @@ export const CommnetoAuthProvider: React.FC<CommentoAuthProviderProps> = ({
             userDetails
           } = await commentoApi.ssoAuth(commentoOrigin, ssoToken)
           if (success) {
-            const domain = (userDetails as UserDetails).provider.split(':')[1]
+            const domain =
+              (userDetails as UserDetails).provider.split(':')[1] + '/'
             await initializeAxiosInstance(
               commentoOrigin,
               commenterToken as string,

@@ -3,10 +3,7 @@ import { useCommentsCountContext } from './CommentsCountContext'
 
 interface Props {
   pageId: string
-  children: (
-    loading: boolean,
-    commentCounts: number | undefined
-  ) => React.ReactElement
+  children: (loading: boolean, commentCounts: number | undefined) => any
 }
 
 export const CommentContextConsumer: React.FC<Props> = ({
@@ -14,5 +11,5 @@ export const CommentContextConsumer: React.FC<Props> = ({
   children
 }) => {
   const { loading, commentCounts } = useCommentsCountContext()
-  return children(loading, commentCounts && commentCounts[pageId])
+  return <div>{children(loading, commentCounts && commentCounts[pageId])}</div>
 }

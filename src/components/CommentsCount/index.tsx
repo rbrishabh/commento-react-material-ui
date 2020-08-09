@@ -2,6 +2,8 @@ import React, { useState, useEffect, ReactNode } from 'react'
 import { useCommentoAuthContext } from '../CommentoAuthContext'
 import { getCommentCount, CommentCountResponse } from '../../utils/commentoApi'
 import { useQuery } from 'react-query'
+export * from './CommentContextConsumer'
+export * from './CommentsCountContext'
 
 interface CommentsCountProps {
   pageId: string
@@ -15,6 +17,9 @@ interface RenderProps {
   isAuthenticating: boolean
 }
 
+const _getCommentCount = async (_key: string, pageId: string) =>
+  await getCommentCount(pageId)
+
 export const CommentsCount: React.FC<CommentsCountProps> = ({
   pageId,
   children
@@ -26,7 +31,9 @@ export const CommentsCount: React.FC<CommentsCountProps> = ({
     isLoading: areCommentsLoading,
     data: commentsResponse,
     isIdle: isCommentsRequestidle
-  } = useQuery(pageId, getCommentCount, { enabled: isAuthenticated })
+  } = useQuery(['commentCount', pageId], _getCommentCount, {
+    enabled: isAuthenticated
+  })
 
   useEffect(() => {
     let isMounted = true

@@ -3,11 +3,11 @@ import { useCommentPageContext } from '../CommentsPage/CommentPageContext'
 import {
   voteComment,
   deleteComment,
-  CommentsPageResponse
+  CommentsPageResponse,
+  CommentsCountsResponse
 } from '../../utils/commentoApi'
 import { CommentPageActions } from '../CommentsPage/CommentPageReducer'
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt'
-// import ThumbDownAltIcon from '@material-ui/icons/ThumbDownAlt'
 import ReplyIcon from '@material-ui/icons/Reply'
 
 import {
@@ -26,6 +26,8 @@ import EditIcon from '@material-ui/icons/Edit'
 import DeleteFilledIcon from '@material-ui/icons/Delete'
 import { useMutation, queryCache } from 'react-query'
 import produce from 'immer'
+import { useCommentsCountContext } from '../CommentsCount'
+import _ from 'lodash'
 
 const useStyles = makeStyles((theme: Theme) => ({
   unlikeButton: {
@@ -95,30 +97,61 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
 }) => {
   const classes = useStyles()
   const { commentDispatch, pageId } = useCommentPageContext()
+  const { queryKey: commentsCountQueryKey } = useCommentsCountContext()
   const [deleteCommentMutation] = useMutation(deleteComment, {
     onMutate: () => {
-      queryCache.cancelQueries(pageId)
-      const oldCommentsPageData = queryCache.getQueryData(pageId)
-      console.log('oldCommentsPageData', oldCommentsPageData)
+      queryCache.cancelQueries(['fetchComments', pageId], { exact: true })
+      queryCache.cancelQueries(commentsCountQueryKey, { exact: true })
 
-      queryCache.setQueryData(pageId, (pageData: CommentsPageResponse) => {
-        const newPageData = produce(pageData, draftPageData => {
-          draftPageData.totalUndeletedComments -= 1
-        })
-        console.log('newPageData', newPageData)
-        return newPageData
-      })
+      const oldCommentsPageData = queryCache.getQueryData([
+        'fetchComments',
+        pageId
+      ])
+      const oldCommentsCountData = queryCache.getQueryData(
+        commentsCountQueryKey
+      )
 
-      return oldCommentsPageData
+      queryCache.setQueryData(
+        ['fetchComments', pageId],
+        (pageData: CommentsPageResponse) => {
+          const newPageData = produce(pageData, draftPageData => {
+            _.remove(draftPageData.comments, {
+              commentHex
+            })
+            draftPageData.totalUndeletedComments -= 1
+          })
+          return newPageData
+        },
+        { exact: true }
+      )
+
+      queryCache.setQueryData(
+        commentsCountQueryKey,
+        (commentsCountData: CommentsCountsResponse) => {
+          return produce(commentsCountData, draftData => {
+            draftData.commentCounts[pageId] -= 1
+          })
+        }
+      )
+
+      return { oldCommentsPageData, oldCommentsCountData }
     },
     // On failure, roll back to the previous value
-    onError: (_err, _variables, previousValue) =>
-      queryCache.setQueryData(pageId, previousValue),
+    onError: (
+      _err: any,
+      _variables: any,
+      { oldCommentsPageData, oldCommentsCountData }: any
+    ) => {
+      queryCache.setQueryData(['fetchComments', pageId], oldCommentsPageData)
+      queryCache.setQueryData(commentsCountQueryKey, oldCommentsCountData)
+    },
     // After success or failure, refetch the todos query
     onSettled: () => {
-      queryCache.invalidateQueries(pageId)
+      queryCache.invalidateQueries(['fetchComments', pageId])
+      queryCache.invalidateQueries(commentsCountQueryKey)
     }
   })
+
   const upvoteComment = useCallback(async () => {
     handleCloseSettings()
     await voteComment(1, commentHex)
