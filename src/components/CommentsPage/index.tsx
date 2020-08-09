@@ -12,7 +12,7 @@ import GridComments from '../CommentTypes/GridComments'
 import PopupComments from '../CommentTypes/PopupComments'
 import { commentsReducer, CommentPageActions } from './CommentPageReducer'
 import turndownService from '../../utils/turndown'
-import cloneDeep from 'lodash.clonedeep'
+import _ from 'lodash'
 import LoadingGif from '../../assets/loading.gif'
 import {
   StylesProvider,
@@ -44,7 +44,7 @@ const mergeRepliesToRootComments = (comments: {
 }): { [key: string]: CommentDetails } => {
   const reducedComments: {
     [key: string]: CommentDetails
-  } = cloneDeep(comments)
+  } = _.cloneDeep(comments)
   const KeyPaths = Object.keys(reducedComments).reduce((acc, key) => {
     acc[key] = []
     return acc

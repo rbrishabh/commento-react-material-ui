@@ -20,4 +20,3 @@ declare module '*.svg' {
 declare module '*.gif'
 
 declare module 'turndown'
-declare module 'lodash.clonedeep'

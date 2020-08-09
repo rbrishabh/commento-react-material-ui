@@ -74,12 +74,10 @@
   "dependencies": {
     "@types/classnames": "^2.2.10",
     "@types/lodash": "^4.14.159",
-    "@types/lodash.clonedeep": "^4.5.6",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "immer": "^7.0.7",
     "lodash": "^4.17.19",
-    "lodash.clonedeep": "^4.5.0",
     "moment": "^2.27.0",
     "react-scroll": "^1.7.16",
     "turndown": "^6.0.0"
