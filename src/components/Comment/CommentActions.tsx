@@ -50,6 +50,7 @@ interface CommentActionsProps {
   isHovered?: boolean
   isReply?: boolean
   likedState: number
+  isModerator: boolean
 }
 
 const StyledMenu = withStyles({
@@ -93,7 +94,8 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
   pageType,
   isHovered,
   isReply,
-  likedState
+  likedState,
+  isModerator
 }) => {
   const classes = useStyles()
   const { commentDispatch, pageId } = useCommentPageContext()
@@ -270,7 +272,6 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
           >
             <StyledMenuItem
               onClick={() => [handleCloseSettings(), onEditClick()]}
-              key='1'
             >
               <ListItemIcon>
                 <EditIcon />
@@ -279,7 +280,34 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
             </StyledMenuItem>
             <StyledMenuItem
               onClick={() => [handleCloseSettings(), handleDeleteComment()]}
-              key='2'
+            >
+              <ListItemIcon>
+                <DeleteFilledIcon />
+              </ListItemIcon>
+              <ListItemText primary='Delete' />
+            </StyledMenuItem>
+          </StyledMenu>
+        </React.Fragment>
+      ) : isModerator ? (
+        <React.Fragment>
+          <Button
+            aria-controls='customized-menu'
+            aria-haspopup='true'
+            variant='contained'
+            className='commentSettingsClass'
+            onClick={handleClickSettings}
+          >
+            <MoreVertIcon color='inherit' />
+          </Button>
+          <StyledMenu
+            style={{ zIndex: 100000000 }}
+            anchorEl={anchorElSettings}
+            keepMounted
+            open={Boolean(anchorElSettings)}
+            onClose={handleCloseSettings}
+          >
+            <StyledMenuItem
+              onClick={() => [handleCloseSettings(), handleDeleteComment()]}
             >
               <ListItemIcon>
                 <DeleteFilledIcon />

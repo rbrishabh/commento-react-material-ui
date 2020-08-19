@@ -124,6 +124,7 @@ export const Comment: React.FC<CommentProps> = ({
               onReplyClick={handleReplyClick}
               repliesCollapsed={collapseChildren}
               likedState={commentDetails.direction}
+              isModerator={currentCommenterDetails.isModerator}
             />
           </div>
         )}
