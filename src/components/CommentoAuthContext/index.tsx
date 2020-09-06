@@ -9,6 +9,7 @@ interface CommentoAuthProviderProps {
   username?: string
   password?: string
   ssoProvider?: string
+  ssoIdToken?: string
   commentoOrigin: string
 }
 
@@ -33,7 +34,8 @@ export const CommnetoAuthProvider: React.FC<CommentoAuthProviderProps> = ({
   children,
   sso,
   ssoToken,
-  commentoOrigin
+  commentoOrigin,
+  ssoIdToken
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [commenterToken, setCommenterToken] = useState<string>('')
@@ -49,7 +51,11 @@ export const CommnetoAuthProvider: React.FC<CommentoAuthProviderProps> = ({
             commenterToken,
             success,
             userDetails
-          } = await commentoApi.ssoAuth(commentoOrigin, ssoToken)
+          } = await commentoApi.ssoAuth(
+            commentoOrigin,
+            ssoToken,
+            ssoIdToken as string
+          )
           if (success) {
             const domain =
               (userDetails as UserDetails).provider.split(':')[1] + '/'

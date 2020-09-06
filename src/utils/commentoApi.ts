@@ -5,19 +5,27 @@ import turndownService from './turndown'
 
 export const ssoAuth = async (
   commentoOrigin: string,
-  ssoToken: string
+  ssoToken: string,
+  ssoIdToken: string
 ): Promise<{
   commenterToken?: string
   success: boolean
   userDetails?: UserDetails
 }> => {
   const { commenterToken, success: authenticationSucess } = await _axios
-    .get(`${commentoOrigin}/api/oauth/sso`, {
-      headers: {
-        Authorization: `Bearer ${ssoToken}`
+    .post(
+      `${commentoOrigin}/api/oauth/sso`,
+      {
+        userIdToken: ssoIdToken
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${ssoToken}`
+        }
       }
-    })
+    )
     .then(res => res.data)
+
   const {
     commenter,
     email: userSecrets,

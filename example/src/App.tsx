@@ -13,6 +13,7 @@ const App = () => {
         sso={true}
         commentoOrigin={process.env.REACT_APP_COMMENTO_ORIGIN as string}
         ssoToken={dummyAuthToken}
+        ssoIdToken={process.env.REACT_APP_ID_TOKEN}
       >
         <Comments />
       </CommnetoAuthProvider>
