@@ -29,6 +29,7 @@ interface CommentPageProps {
   commentSystem?: string
   label?: string
   [key: string]: any
+  onCommentSuccess: (pageId: string, parentHex?: string) => void
 }
 
 const convertArrayToKeyValuePairs = (comments: CommentDetails[]) => {
@@ -95,6 +96,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
   width = 0,
   commentSystem,
   label,
+  onCommentSuccess,
   ...restProps
 }) => {
   const [commentsLoaded, setCommentsLoaded] = useState<boolean>(false)
@@ -191,6 +193,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
             commentsLoaded={commentsLoaded}
             pageType={pageType}
             label={label || 'Comments'}
+            onCommentSuccess={onCommentSuccess}
           />
         ) : (
           ''

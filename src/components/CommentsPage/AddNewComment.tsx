@@ -36,7 +36,7 @@ interface AddNewCommentProps {
   pageId: string
   parentHex?: string
   pageType?: string
-  onSuccess?: () => void
+  onSuccess?: (pageId: string, parentHex?: string | undefined) => void
   scrollToBottom?: () => void
   commentsLoaded?: any
   userData?: any
@@ -146,7 +146,7 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
       })
     }
     setCommentBody('')
-    onSuccess && onSuccess()
+    onSuccess && onSuccess(pageId, parentHex)
     scrollToBottom && scrollToBottom()
   }, [pageId, commentBody])
 

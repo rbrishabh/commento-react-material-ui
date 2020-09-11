@@ -21,6 +21,7 @@ interface CommentPageProps {
   expandedWidth?: number
   label: string
   onClose?: () => void
+  onCommentSuccess?: (pageId: string, parentHex?: string) => void
 }
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -127,7 +128,8 @@ const PopupComments: React.FC<CommentPageProps> = ({
   expandedWidth = 1000,
   commentSystem,
   label,
-  onClose
+  onClose,
+  onCommentSuccess
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const reversedCommentValues = useMemo(() => commentValues.reverse(), [
@@ -200,6 +202,7 @@ const PopupComments: React.FC<CommentPageProps> = ({
             pageId={pageId}
             commentsLoaded={commentsLoaded}
             userData={userDetails}
+            onSuccess={onCommentSuccess}
           />
         </div>
       )}
