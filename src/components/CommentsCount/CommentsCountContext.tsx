@@ -32,7 +32,7 @@ export const CommentsCountContextProvider: React.FC<CommentCountContextProviderP
   const { data, isLoading, isIdle, isError } = useQuery(
     ['commentsCount', pageIds],
     _getCommentsCounts,
-    { enabled: isAuthenticated }
+    { enabled: isAuthenticated, staleTime: 36000 }
   )
 
   return (
