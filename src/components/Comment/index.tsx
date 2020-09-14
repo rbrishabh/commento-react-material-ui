@@ -75,9 +75,14 @@ export const Comment: React.FC<CommentProps> = ({
     []
   )
   const handleReplyClick = useCallback(() => {
-    if (onReplySuccess) onReplySuccess(pageId, commentDetails.commentHex)
     setReplyMode(prev => !prev)
   }, [])
+
+  const _onReplySuccess = useCallback(() => {
+    if (onReplySuccess) onReplySuccess(pageId, commentDetails.commentHex)
+    handleReplyClick()
+  }, [pageId, commentDetails.commentHex])
+
   return (
     <div className='comment-wrapper'>
       {!hideDivider && !isReply && <Divider className='dividerMargin' />}
@@ -141,7 +146,7 @@ export const Comment: React.FC<CommentProps> = ({
             pageType={pageType}
             isReply
             parentHex={commentDetails.commentHex}
-            onSuccess={handleReplyClick}
+            onSuccess={_onReplySuccess}
             userData={
               isOwnComment
                 ? currentCommenterDetails
