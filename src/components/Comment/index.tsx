@@ -18,6 +18,7 @@ interface CommentProps {
   commentSystem?: string
   isReply?: boolean
   hideDivider?: boolean
+  onReplySuccess?: (pageId: string, parentHex?: string) => void
 }
 
 export const Comment: React.FC<CommentProps> = ({
@@ -25,7 +26,8 @@ export const Comment: React.FC<CommentProps> = ({
   pageType = 'grid',
   commentSystem,
   isReply = false,
-  hideDivider = false
+  hideDivider = false,
+  onReplySuccess
 }) => {
   const {
     pageId,
@@ -72,7 +74,10 @@ export const Comment: React.FC<CommentProps> = ({
     () => setCollapseChildren(prev => !prev),
     []
   )
-  const handleReplyClick = useCallback(() => setReplyMode(prev => !prev), [])
+  const handleReplyClick = useCallback(() => {
+    if (onReplySuccess) onReplySuccess(pageId, commentDetails.commentHex)
+    setReplyMode(prev => !prev)
+  }, [])
   return (
     <div className='comment-wrapper'>
       {!hideDivider && !isReply && <Divider className='dividerMargin' />}

@@ -181,6 +181,7 @@ const PopupComments: React.FC<CommentPageProps> = ({
                   pageType={pageType}
                   commentDetails={comment}
                   hideDivider={index === 0}
+                  onReplySuccess={onCommentSuccess}
                 />
               )
             )}
