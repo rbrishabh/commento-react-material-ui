@@ -29,7 +29,7 @@ interface CommentPageProps {
   commentSystem?: string
   label?: string
   [key: string]: any
-  onCommentSuccess: (pageId: string, parentHex?: string) => void
+  onCommentSuccess?: (pageId: string, parentHex?: string) => void
 }
 
 const convertArrayToKeyValuePairs = (comments: CommentDetails[]) => {

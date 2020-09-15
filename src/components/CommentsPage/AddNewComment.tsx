@@ -3,7 +3,8 @@ import {
   addNewComment,
   addReplyToComment,
   CommentsPageResponse,
-  CommentsCountsResponse
+  CommentsCountsResponse,
+  CommentCountResponse
 } from '../../utils/commentoApi'
 import { useCommentPageContext } from './CommentPageContext'
 import { CommentPageActions } from './CommentPageReducer'
@@ -60,16 +61,20 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
     () => ({
       onMutate: () => {
         queryCache.cancelQueries(['fetchComments', pageId], { exact: true })
+        queryCache.cancelQueries(['commentCount', pageId], { exact: true })
         queryCache.cancelQueries(commentsCountQueryKey, { exact: true })
 
         const oldCommentsPageData = queryCache.getQueryData([
           'fetchComments',
           pageId
         ])
+        const oldCommentCountData = queryCache.getQueryData([
+          'commentCount',
+          pageId
+        ])
         const oldCommentsCountData = queryCache.getQueryData(
           commentsCountQueryKey
         )
-        console.log('oldCommentsCountData', oldCommentsCountData)
 
         queryCache.setQueryData(
           ['fetchComments', pageId],
@@ -83,32 +88,53 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         )
 
         queryCache.setQueryData(
+          ['commentCount', pageId],
+          (oldCommentCount: CommentCountResponse) => {
+            const newPageData = produce(oldCommentCount, draftCommentCount => {
+              draftCommentCount.commentCount += 1
+            })
+            return newPageData
+          },
+          { exact: true }
+        )
+
+        queryCache.setQueryData(
           commentsCountQueryKey,
           (commentsCountData: CommentsCountsResponse) => {
             return produce(commentsCountData, draftData => {
-              if (!draftData?.commentCounts[pageId]) {
-                draftData.commentCounts[pageId] = 1
-                return
+              if (draftData) {
+                if (!draftData?.commentCounts[pageId]) {
+                  draftData.commentCounts[pageId] = 1
+                  return
+                }
+                draftData.commentCounts[pageId] += 1
               }
-              draftData.commentCounts[pageId] += 1
             })
           }
         )
 
-        return { oldCommentsPageData, oldCommentsCountData }
+        return {
+          oldCommentsPageData,
+          oldCommentCountData,
+          oldCommentsCountData
+        }
       },
       // On failure, roll back to the previous value
-      onError: (
-        _err: any,
-        _variables: any,
-        { oldCommentsPageData, oldCommentsCountData }: any
-      ) => {
+      onError: (_err: any, _variables: any, _snapShot: any) => {
+        console.log(_err, _variables)
+        const {
+          oldCommentsPageData,
+          oldCommentCountData,
+          oldCommentsCountData
+        } = _snapShot
         queryCache.setQueryData(['fetchComments', pageId], oldCommentsPageData)
+        queryCache.setQueryData(['commentCount', pageId], oldCommentCountData)
         queryCache.setQueryData(commentsCountQueryKey, oldCommentsCountData)
       },
       // After success or failure, refetch the todos query
       onSettled: () => {
         queryCache.invalidateQueries(['fetchComments', pageId])
+        queryCache.invalidateQueries(['commentCount', pageId], { exact: true })
         queryCache.invalidateQueries(commentsCountQueryKey)
       }
     }),

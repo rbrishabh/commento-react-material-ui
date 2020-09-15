@@ -32,7 +32,8 @@ export const CommentsCount: React.FC<CommentsCountProps> = ({
     data: commentsResponse,
     isIdle: isCommentsRequestidle
   } = useQuery(['commentCount', pageId], _getCommentCount, {
-    enabled: isAuthenticated
+    enabled: isAuthenticated,
+    staleTime: 45000
   })
 
   useEffect(() => {

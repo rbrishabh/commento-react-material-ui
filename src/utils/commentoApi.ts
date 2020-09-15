@@ -87,9 +87,9 @@ export const getCommentCount = async (
 ): Promise<CommentCountResponse | { success: boolean }> => {
   const axios = getAxiosInstance()
 
-  const { commentCounts, success } = await axios
-    .post('/api/comment/count', {
-      paths: [pageId],
+  const { commentCount, success } = await axios
+    .post('/api/comment/count-single', {
+      path: pageId,
       ...axios.defaults.data
     })
     .then(res => res.data)
@@ -98,7 +98,7 @@ export const getCommentCount = async (
     return { success }
   }
 
-  return { success, commentCount: commentCounts[pageId] }
+  return { success, commentCount: commentCount }
 }
 
 export interface CommentsCountsResponse {

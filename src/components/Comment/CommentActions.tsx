@@ -4,7 +4,8 @@ import {
   voteComment,
   deleteComment,
   CommentsPageResponse,
-  CommentsCountsResponse
+  CommentsCountsResponse,
+  CommentCountResponse
 } from '../../utils/commentoApi'
 import { CommentPageActions } from '../CommentsPage/CommentPageReducer'
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt'
@@ -103,10 +104,16 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
   const [deleteCommentMutation] = useMutation(deleteComment, {
     onMutate: () => {
       queryCache.cancelQueries(['fetchComments', pageId], { exact: true })
+      queryCache.cancelQueries(['commentCount', pageId], { exact: true })
+
       queryCache.cancelQueries(commentsCountQueryKey, { exact: true })
 
       const oldCommentsPageData = queryCache.getQueryData([
         'fetchComments',
+        pageId
+      ])
+      const oldCommentCountData = queryCache.getQueryData([
+        'commentCount',
         pageId
       ])
       const oldCommentsCountData = queryCache.getQueryData(
@@ -128,28 +135,45 @@ export const CommentActions: React.FC<CommentActionsProps> = ({
       )
 
       queryCache.setQueryData(
+        ['commentCount', pageId],
+        (oldCommentCount: CommentCountResponse) => {
+          const newPageData = produce(oldCommentCount, draftCommentCount => {
+            draftCommentCount.commentCount -= 1
+          })
+          return newPageData
+        },
+        { exact: true }
+      )
+
+      queryCache.setQueryData(
         commentsCountQueryKey,
         (commentsCountData: CommentsCountsResponse) => {
           return produce(commentsCountData, draftData => {
-            draftData.commentCounts[pageId] -= 1
+            if (draftData) draftData.commentCounts[pageId] -= 1
           })
         }
       )
 
-      return { oldCommentsPageData, oldCommentsCountData }
+      return {
+        oldCommentsPageData,
+        oldCommentCountData,
+        oldCommentsCountData
+      }
     },
     // On failure, roll back to the previous value
     onError: (
       _err: any,
       _variables: any,
-      { oldCommentsPageData, oldCommentsCountData }: any
+      { oldCommentsPageData, oldCommentCountData, oldCommentsCountData }: any
     ) => {
       queryCache.setQueryData(['fetchComments', pageId], oldCommentsPageData)
+      queryCache.setQueryData(['commentCount', pageId], oldCommentCountData)
       queryCache.setQueryData(commentsCountQueryKey, oldCommentsCountData)
     },
     // After success or failure, refetch the todos query
     onSettled: () => {
       queryCache.invalidateQueries(['fetchComments', pageId])
+      queryCache.invalidateQueries(['commentCount', pageId])
       queryCache.invalidateQueries(commentsCountQueryKey)
     }
   })
