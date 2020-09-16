@@ -2,7 +2,7 @@ import React, { useState, useEffect, ReactNode } from 'react'
 import { useCommentoAuthContext } from '../CommentoAuthContext'
 import { getCommentCount, CommentCountResponse } from '../../utils/commentoApi'
 import { useQuery } from 'react-query'
-export * from './CommentContextConsumer'
+export * from './CommentCountContextConsumer'
 export * from './CommentsCountContext'
 
 interface CommentsCountProps {

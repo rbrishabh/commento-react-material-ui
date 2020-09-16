@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import {
   CommentsPage,
-  CommentsCount
+  // CommentsCount
   // CommentsCountContextProvider,
-  // CommentContextConsumer
+  CommentCountContextConsumer,
+  CommentsCountContextProvider
 } from 'commento-react-material-ui'
 
 export default function Comments() {
@@ -18,33 +19,52 @@ export default function Comments() {
         alignItems: 'center'
       }}
     >
-      <CommentsPage
-        pageId={
-          flag
-            ? '2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization'
-            : '4yjtdhs8LmZ2nQmeQC4Tv-[auth0|5edb8f3dc9db2e0d36a6d77c]-personal'
-        }
-        pageType={'popup'}
-        width={400}
-        key={flag ? 'organization' : 'personal'}
-        label={flag ? 'Team Discussion' : 'Personal Notes'}
-        commentSystem={flag ? 'organization' : 'personal'}
-      />
-
-      <button onClick={() => setSwitch(prev => !prev)}>Switch</button>
-      {/* <CommentContextConsumer
+      <CommentsCountContextProvider>
+        <CommentsPage
           pageId={
             flag
               ? '2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization'
               : '4yjtdhs8LmZ2nQmeQC4Tv-[auth0|5edb8f3dc9db2e0d36a6d77c]-personal'
           }
-        >
-          {(loading, commentCount) =>
-            loading ? 'Loading...' : commentCount || 0
+          pageType={'popup'}
+          width={400}
+          key={flag ? 'organization' : 'personal'}
+          label={flag ? 'Team Discussion' : 'Personal Notes'}
+          commentSystem={flag ? 'organization' : 'personal'}
+        />
+
+        <button onClick={() => setSwitch(prev => !prev)}>Switch</button>
+        <CommentCountContextConsumer
+          pageId={
+            '4yjtdhs8LmZ2nQmeQC4Tv-[auth0|5edb8f3dc9db2e0d36a6d77c]-personal'
           }
-        </CommentContextConsumer>
-      </CommentsCountContextProvider> */}
-      <CommentsCount
+        >
+          {(loading, commentCount) => {
+            console.log(
+              'Comments -> loading, commentCount',
+              loading,
+              commentCount
+            )
+
+            return loading ? 'Loading...' : commentCount || 0
+          }}
+        </CommentCountContextConsumer>
+        <CommentCountContextConsumer
+          pageId={
+            '2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization'
+          }
+        >
+          {(loading, commentCount) => {
+            console.log(
+              'Comments -> loading, commentCount',
+              loading,
+              commentCount
+            )
+            return loading ? 'Loading...' : commentCount || 0
+          }}
+        </CommentCountContextConsumer>
+      </CommentsCountContextProvider>
+      {/*  <CommentsCount
         pageId={
           flag
             ? '2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization'
@@ -56,7 +76,7 @@ export default function Comments() {
             {commentsLoaded ? commentsLength || 0 : 'loading'}
           </div>
         )}
-      </CommentsCount>
+        </CommentsCount> */}
     </div>
   )
 }

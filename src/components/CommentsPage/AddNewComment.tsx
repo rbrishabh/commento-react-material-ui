@@ -2,9 +2,7 @@ import React, { useCallback, useState, useMemo } from 'react'
 import {
   addNewComment,
   addReplyToComment,
-  CommentsPageResponse,
-  CommentsCountsResponse,
-  CommentCountResponse
+  CommentsPageResponse
 } from '../../utils/commentoApi'
 import { useCommentPageContext } from './CommentPageContext'
 import { CommentPageActions } from './CommentPageReducer'
@@ -15,7 +13,6 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core'
 import { useMutation, queryCache } from 'react-query'
 import { produce } from 'immer'
-import { useCommentsCountContext } from '../CommentsCount'
 
 const useInputClasses = makeStyles(_theme => ({
   root: {
@@ -56,13 +53,12 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
 }) => {
   const [commentBody, setCommentBody] = useState<string>('')
   const { commentDispatch, currentCommenterDetails } = useCommentPageContext()
-  const { queryKey: commentsCountQueryKey } = useCommentsCountContext()
   const queryConfig = useMemo(
     () => ({
       onMutate: () => {
         queryCache.cancelQueries(['fetchComments', pageId], { exact: true })
         queryCache.cancelQueries(['commentCount', pageId], { exact: true })
-        queryCache.cancelQueries(commentsCountQueryKey, { exact: true })
+        // queryCache.cancelQueries(commentsCountQueryKey, { exact: true })
 
         const oldCommentsPageData = queryCache.getQueryData([
           'fetchComments',
@@ -72,9 +68,6 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
           'commentCount',
           pageId
         ])
-        const oldCommentsCountData = queryCache.getQueryData(
-          commentsCountQueryKey
-        )
 
         queryCache.setQueryData(
           ['fetchComments', pageId],
@@ -89,56 +82,29 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
 
         queryCache.setQueryData(
           ['commentCount', pageId],
-          (oldCommentCount: CommentCountResponse) => {
-            const newPageData = produce(oldCommentCount, draftCommentCount => {
-              draftCommentCount.commentCount += 1
-            })
-            return newPageData
-          },
+          (oldCommentCount: number) =>
+            oldCommentCount ? oldCommentCount + 1 : 1,
           { exact: true }
-        )
-
-        queryCache.setQueryData(
-          commentsCountQueryKey,
-          (commentsCountData: CommentsCountsResponse) => {
-            return produce(commentsCountData, draftData => {
-              if (draftData) {
-                if (!draftData?.commentCounts[pageId]) {
-                  draftData.commentCounts[pageId] = 1
-                  return
-                }
-                draftData.commentCounts[pageId] += 1
-              }
-            })
-          }
         )
 
         return {
           oldCommentsPageData,
-          oldCommentCountData,
-          oldCommentsCountData
+          oldCommentCountData
         }
       },
       // On failure, roll back to the previous value
       onError: (_err: any, _variables: any, _snapShot: any) => {
-        console.log(_err, _variables)
-        const {
-          oldCommentsPageData,
-          oldCommentCountData,
-          oldCommentsCountData
-        } = _snapShot
+        const { oldCommentsPageData, oldCommentCountData } = _snapShot
         queryCache.setQueryData(['fetchComments', pageId], oldCommentsPageData)
         queryCache.setQueryData(['commentCount', pageId], oldCommentCountData)
-        queryCache.setQueryData(commentsCountQueryKey, oldCommentsCountData)
       },
       // After success or failure, refetch the todos query
       onSettled: () => {
         queryCache.invalidateQueries(['fetchComments', pageId])
         queryCache.invalidateQueries(['commentCount', pageId], { exact: true })
-        queryCache.invalidateQueries(commentsCountQueryKey)
       }
     }),
-    [commentsCountQueryKey, pageId]
+    [pageId]
   )
   const [addReplyToCommentMutation] = useMutation(
     addReplyToComment,
