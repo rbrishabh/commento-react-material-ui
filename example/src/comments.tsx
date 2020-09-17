@@ -19,7 +19,7 @@ export default function Comments() {
         alignItems: 'center'
       }}
     >
-      <CommentsCountContextProvider>
+      <CommentsCountContextProvider staleTime={60000}>
         <CommentsPage
           pageId={
             flag
@@ -34,35 +34,28 @@ export default function Comments() {
         />
 
         <button onClick={() => setSwitch(prev => !prev)}>Switch</button>
-        <CommentCountContextConsumer
-          pageId={
-            '4yjtdhs8LmZ2nQmeQC4Tv-[auth0|5edb8f3dc9db2e0d36a6d77c]-personal'
-          }
-        >
-          {(loading, commentCount) => {
-            console.log(
-              'Comments -> loading, commentCount',
-              loading,
-              commentCount
-            )
 
-            return loading ? 'Loading...' : commentCount || 0
-          }}
-        </CommentCountContextConsumer>
-        <CommentCountContextConsumer
-          pageId={
-            '2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization'
-          }
-        >
-          {(loading, commentCount) => {
-            console.log(
-              'Comments -> loading, commentCount',
-              loading,
-              commentCount
-            )
-            return loading ? 'Loading...' : commentCount || 0
-          }}
-        </CommentCountContextConsumer>
+        {flag ? (
+          <CommentCountContextConsumer
+            pageId={
+              '2qwheYL25ctjDFrdEqr3Kg-[63bfd622-a23a-439c-ba36-f135c091e1ac]-organization'
+            }
+          >
+            {(loading, commentCount) => {
+              return loading ? 'Loading...' : commentCount || 0
+            }}
+          </CommentCountContextConsumer>
+        ) : (
+          <CommentCountContextConsumer
+            pageId={
+              '4yjtdhs8LmZ2nQmeQC4Tv-[auth0|5edb8f3dc9db2e0d36a6d77c]-personal'
+            }
+          >
+            {(loading, commentCount) => {
+              return loading ? 'Loading...' : commentCount || 0
+            }}
+          </CommentCountContextConsumer>
+        )}
       </CommentsCountContextProvider>
       {/*  <CommentsCount
         pageId={

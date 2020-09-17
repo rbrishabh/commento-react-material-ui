@@ -96,12 +96,9 @@ const createCacheUpdateHandler = (
 ) => {
   if (!query) return
   const queryKey = query?.queryKey
-  console.log('queryKey', queryKey)
   const { isMatching, pageId } = verifyCommentCountQueryKey(queryKey)
-  console.log('isMatching, pageId', isMatching, pageId)
   if (isMatching) {
     const queryData = query?.state.data as number
-    console.log('queryData', queryData)
     dispatch({
       type: ACTIONS.UPDATE_PAGE_ID,
       data: {
@@ -114,10 +111,12 @@ const createCacheUpdateHandler = (
 
 interface CommentCountContextProviderProps {
   children: any
+  staleTime?: number
 }
 
 export const CommentsCountContextProvider: React.FC<CommentCountContextProviderProps> = ({
-  children
+  children,
+  staleTime = 420000
 }) => {
   const [commentsCountData, dispatch] = useReducer(CommentCountStateReducer, {})
   const { isAuthenticated } = useCommentoAuthContext()
@@ -171,17 +170,20 @@ export const CommentsCountContextProvider: React.FC<CommentCountContextProviderP
         data: pageCountData
       })
 
-      const { commentCounts, success } = await getCommentsCounts(
-        pageIdsWithNoData
-      )
+      if (pageIdsWithNoData.length > 0) {
+        const { commentCounts, success } = await getCommentsCounts(
+          pageIdsWithNoData
+        )
 
-      if (success) {
-        Object.keys(pageCountData).forEach(pageId => {
-          const commentCount = commentCounts[pageId]
-          queryCache.setQueryData(['commentCount', pageId], commentCount, {
-            staleTime: 45000
+        if (success) {
+          Object.keys(pageCountData).forEach(pageId => {
+            const commentCount = commentCounts[pageId]
+            queryCache.setQueryData(['commentCount', pageId], commentCount, {
+              staleTime,
+              cacheTime: staleTime
+            })
           })
-        })
+        }
       }
     },
     [isAuthenticated]

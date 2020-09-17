@@ -12,7 +12,6 @@ export const CommentCountContextConsumer: React.FC<Props> = ({
   children
 }) => {
   const { commentCounts, _addPageID } = useCommentsCountContext()
-  console.log('commentCounts', commentCounts)
   const { isAuthenticated } = useCommentoAuthContext()
 
   useEffect(() => {
