@@ -16,7 +16,7 @@ export const CommentCountContextConsumer: React.FC<Props> = ({
   const { isAuthenticated } = useCommentoAuthContext()
 
   useEffect(() => {
-    if (!commentCounts[pageId] && isAuthenticated) {
+    if (isAuthenticated) {
       _addPageID(pageId)
     }
   }, [pageId, isAuthenticated])

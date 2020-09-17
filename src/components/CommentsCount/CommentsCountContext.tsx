@@ -152,7 +152,7 @@ export const CommentsCountContextProvider: React.FC<CommentCountContextProviderP
 
       pageIds.forEach(pageId => {
         const query = queryCache.getQuery(['commentCount', pageId])
-        if (!query?.state.isStale) {
+        if (query && !query?.state.isStale) {
           const count: number | undefined = query?.state.data as number
           if (count) {
             pageCountData[pageId] = count
