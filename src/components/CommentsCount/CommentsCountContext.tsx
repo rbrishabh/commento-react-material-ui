@@ -37,7 +37,7 @@ const CommentCountStateReducer = (
         Object.entries(commentsCountData).forEach(([pageId, commentCount]) => {
           draftState[pageId] = {
             commentCount: commentCount || 0,
-            loading: !commentCount
+            loading: isNaN(commentCount)
           }
         })
       })
@@ -153,7 +153,7 @@ export const CommentsCountContextProvider: React.FC<CommentCountContextProviderP
         const query = queryCache.getQuery(['commentCount', pageId])
         if (query && !query?.state.isStale) {
           const count: number | undefined = query?.state.data as number
-          if (count) {
+          if (!isNaN(count)) {
             pageCountData[pageId] = count
           } else {
             pageCountData[pageId] = null
@@ -176,12 +176,16 @@ export const CommentsCountContextProvider: React.FC<CommentCountContextProviderP
         )
 
         if (success) {
-          Object.keys(pageCountData).forEach(pageId => {
+          pageIdsWithNoData.forEach(pageId => {
             const commentCount = commentCounts[pageId]
-            queryCache.setQueryData(['commentCount', pageId], commentCount, {
-              staleTime,
-              cacheTime: staleTime
-            })
+            queryCache.setQueryData(
+              ['commentCount', pageId],
+              commentCount || 0,
+              {
+                staleTime,
+                cacheTime: staleTime
+              }
+            )
           })
         }
       }
