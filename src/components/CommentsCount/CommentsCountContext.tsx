@@ -146,7 +146,7 @@ export const CommentsCountContextProvider: React.FC<CommentCountContextProviderP
   const addNewPageIDs = useCallback(
     async (pageIds: string[]) => {
       if (!isAuthenticated) return
-      const pageCountData: { [pageId: string]: number | null } = {}
+      const pageCountData: { [pageId: string]: number | undefined } = {}
       const pageIdsWithNoData: string[] = []
 
       pageIds.forEach(pageId => {
@@ -156,11 +156,11 @@ export const CommentsCountContextProvider: React.FC<CommentCountContextProviderP
           if (!isNaN(count)) {
             pageCountData[pageId] = count
           } else {
-            pageCountData[pageId] = null
+            pageCountData[pageId] = undefined
             pageIdsWithNoData.push(pageId)
           }
         } else {
-          pageCountData[pageId] = null
+          pageCountData[pageId] = undefined
           pageIdsWithNoData.push(pageId)
         }
       })
