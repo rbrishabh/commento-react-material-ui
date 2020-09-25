@@ -12,6 +12,7 @@ interface CommentPageProps {
   commentValues: any
   commentsLoaded: any
   commentSystem?: string
+  onCommentSuccess?: (pageId: string, parentHex?: string) => void
 }
 
 const GridComments: React.FC<CommentPageProps> = ({
@@ -21,7 +22,8 @@ const GridComments: React.FC<CommentPageProps> = ({
   allowOnlyOneRootComment,
   commentValues,
   commentsLoaded,
-  commentSystem
+  commentSystem,
+  onCommentSuccess
 }) => {
   commentValues = commentValues.reverse()
   // console.log(userDetails)
@@ -41,6 +43,7 @@ const GridComments: React.FC<CommentPageProps> = ({
               pageType={pageType}
               pageId={pageId}
               userData={userDetails}
+              onSuccess={onCommentSuccess}
             />
           )}
           <div className='commentslist-wrapper'>
@@ -49,6 +52,7 @@ const GridComments: React.FC<CommentPageProps> = ({
                 commentSystem={commentSystem}
                 key={comment.commentHex}
                 commentDetails={comment}
+                onReplySuccess={onCommentSuccess}
               />
             ))}
           </div>

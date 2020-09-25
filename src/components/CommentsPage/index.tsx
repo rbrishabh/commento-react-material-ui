@@ -180,6 +180,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
             commentsLoaded={commentsLoaded}
             pageType={pageType}
             commentSystem={commentSystem}
+            onCommentSuccess={onCommentSuccess}
           />
         ) : pageType === 'popup' ? (
           <PopupComments

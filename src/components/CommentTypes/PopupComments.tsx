@@ -131,18 +131,18 @@ const PopupComments: React.FC<CommentPageProps> = ({
   onClose,
   onCommentSuccess
 }) => {
+  const { commentoOrigin } = useCommentoAuthContext()
   const [isExpanded, setIsExpanded] = useState(false)
   const reversedCommentValues = useMemo(() => commentValues.reverse(), [
     commentValues
   ])
-  const { commentoOrigin } = useCommentoAuthContext()
   const classes = useStyles({ width, isExpanded, expandedWidth })
   useEffect(() => {
     if (commentsLoaded) scrollToBottom()
   }, [commentsLoaded])
 
-  const expandPopUp = () => setIsExpanded(true)
-  const shrinkPopUp = () => setIsExpanded(false)
+  const expandPopUp = useCallback(() => setIsExpanded(true), [])
+  const shrinkPopUp = useCallback(() => setIsExpanded(false), [])
   const redirectToCommentoSettings = useCallback(
     () =>
       window.open(
