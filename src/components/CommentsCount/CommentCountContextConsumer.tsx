@@ -20,12 +20,8 @@ export const CommentCountContextConsumer: React.FC<Props> = ({
     }
   }, [pageId, isAuthenticated])
 
-  return (
-    <div>
-      {children(
-        commentCounts[pageId] && commentCounts[pageId].loading,
-        commentCounts[pageId] && commentCounts[pageId].commentCount
-      )}
-    </div>
+  return children(
+    commentCounts[pageId] && commentCounts[pageId].loading,
+    commentCounts[pageId] && commentCounts[pageId].commentCount
   )
 }
