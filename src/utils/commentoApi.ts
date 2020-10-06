@@ -62,12 +62,13 @@ export const fetchComments = async (
   pageId: string
 ): Promise<CommentsPageResponse> => {
   const axios = getAxiosInstance()
-  const { comments, commenters } = await axios
-    .post('/api/comment/list', {
-      path: pageId,
-      ...axios.defaults.data
-    })
-    .then(res => res.data)
+
+  const response = await axios.post('/api/comment/list', {
+    path: pageId,
+    ...axios.defaults.data
+  })
+
+  const { comments, commenters } = response.data
   return {
     commenters,
     comments,

@@ -1,24 +1,28 @@
-import React, { useState, useEffect, useReducer, useMemo } from 'react'
-import { CommentDetails, UserDetails } from '../../interfaces'
+import {
+  createGenerateClassName,
+  StylesProvider
+} from '@material-ui/core/styles'
+import React, { useEffect, useMemo, useReducer, useState } from 'react'
+import { useQuery } from 'react-query'
+import { UserDetails } from '../../interfaces'
+import {
+  addMarkdownToComments,
+  convertArrayToKeyValuePairs,
+  mergeRepliesToRootComments,
+  removeDeletedCommentsWithNoReplies
+} from '../../utils'
+import {
+  CommentSortTypes,
+  CommentsPageResponse,
+  fetchComments,
+  sortCommentByCreationDate
+} from '../../utils/commentoApi'
 import { useCommentoAuthContext } from '../CommentoAuthContext'
 import { CommentPageContext } from './CommentPageContext'
-import {
-  fetchComments,
-  sortCommentByCreationDate,
-  CommentSortTypes,
-  CommentsPageResponse
-} from '../../utils/commentoApi'
-import GridComments from '../CommentTypes/GridComments'
-import PopupComments from '../CommentTypes/PopupComments'
-import { commentsReducer, CommentPageActions } from './CommentPageReducer'
-import turndownService from '../../utils/turndown'
-import _ from 'lodash'
-import LoadingGif from '../../assets/loading.gif'
-import {
-  StylesProvider,
-  createGenerateClassName
-} from '@material-ui/core/styles'
-import { useQuery } from 'react-query'
+import { CommentPageActions, commentsReducer } from './CommentPageReducer'
+import FakeCommentsPopup from './CommentPageTypes/FakeCommentsPopUp'
+import GridComments from './CommentPageTypes/GridComments'
+import PopupComments from './CommentPageTypes/PopupComments'
 
 interface CommentPageProps {
   pageId: string
@@ -32,68 +36,18 @@ interface CommentPageProps {
   onCommentSuccess?: (pageId: string, parentHex?: string) => void
 }
 
-const convertArrayToKeyValuePairs = (comments: CommentDetails[]) => {
-  return comments.reduce((acc, comment) => {
-    if (comment.deleted && !(comment.parentHex === 'root')) return acc
-    acc[comment.commentHex] = comment
-    return acc
-  }, {})
-}
-
-const mergeRepliesToRootComments = (comments: {
-  [key: string]: CommentDetails
-}): { [key: string]: CommentDetails } => {
-  const reducedComments: {
-    [key: string]: CommentDetails
-  } = _.cloneDeep(comments)
-  const KeyPaths = Object.keys(reducedComments).reduce((acc, key) => {
-    acc[key] = []
-    return acc
-  }, {})
-  Object.values(reducedComments).forEach(comment => {
-    const isChild = comment.parentHex !== 'root'
-    const isDeleted = comment.deleted
-    if (isChild && !isDeleted) {
-      const newKeyPath = [...KeyPaths[comment.parentHex], comment.parentHex]
-      KeyPaths[comment.commentHex] = newKeyPath
-      const entryPoint: CommentDetails = newKeyPath.reduce(
-        (entryPoint, key) => {
-          if (entryPoint[key]) return entryPoint[key]
-          return entryPoint.replies[key]
-        },
-        reducedComments
-      )
-      if (!entryPoint.replies) entryPoint.replies = {}
-      entryPoint.replies[comment.commentHex] = comment
-      delete reducedComments[comment.commentHex]
-    }
-  })
-  return reducedComments
-}
-
-const addMarkdownToComments = (comments: CommentDetails[]) =>
-  comments.map(comment => {
-    if (!comment.markdown)
-      comment.markdown = turndownService.turndown(comment.html)
-    return comment
-  })
-
-const removeDeletedCommentsWithNoReplies = (comments: CommentDetails[]) =>
-  comments.filter(comment => !(comment.deleted && !comment.replies))
-
 const classGenerator = createGenerateClassName({
   seed: 'commento',
   productionPrefix: 'commento'
 })
 
 const _fetchComments = async (_key: string, pageId: string) =>
-  await fetchComments(pageId)
+  fetchComments(pageId)
 
 export const CommentsPage: React.FC<CommentPageProps> = ({
   pageId,
   allowOnlyOneRootComment,
   pageType = 'grid',
-  width = 0,
   commentSystem,
   label,
   onCommentSuccess,
@@ -110,11 +64,15 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
   const {
     isLoading: areCommentsLoading,
     data: commentsResponse,
-    isIdle: isCommentsRequestidle
+    isIdle: isCommentsRequestidle,
+    isError,
+    error
   } = useQuery(['fetchComments', pageId], _fetchComments, {
-    enabled: isAuthenticated
+    enabled: isAuthenticated,
+    retry: 1
   })
 
+  console.log('query => error', error)
   const commentValues = useMemo(
     () =>
       sortCommentByCreationDate(
@@ -130,6 +88,9 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
     let isMounted = true
     if (areCommentsLoading || isCommentsRequestidle)
       return setCommentsLoaded(false)
+
+    if (isError) return
+
     if (isMounted) {
       const { commenters, comments } = commentsResponse as CommentsPageResponse
       setCommentors(commenters)
@@ -142,24 +103,29 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
     return () => {
       isMounted = false
     }
-  }, [areCommentsLoading, isCommentsRequestidle, commentsResponse])
+  }, [areCommentsLoading, isCommentsRequestidle, commentsResponse, isError])
 
-  if (isAuthenticating) {
-    return pageType === 'popup' ? (
-      <img src={LoadingGif} className='loading-gif' />
-    ) : (
-      <img src={LoadingGif} className='loading-gif' />
-    )
-  } else if (!isAuthenticated && !isAuthenticating) {
+  if (!isAuthenticated && !isAuthenticating) {
     return (
-      <div className='comments-page'>
+      <FakeCommentsPopup {...restProps}>
         <div className='commento-alert'>
           You are not authorized to access this comment stream
         </div>
-      </div>
+      </FakeCommentsPopup>
     )
   }
 
+  if (areCommentsLoading || isCommentsRequestidle)
+    return <FakeCommentsPopup label={label || 'Comments'} {...restProps} />
+
+  if (isError || error)
+    return (
+      <FakeCommentsPopup label={label || 'Comments'} {...restProps}>
+        <div className='commento-alert'>Error: {error?.message}</div>
+      </FakeCommentsPopup>
+    )
+
+  console.log('isError', isError)
   return (
     <CommentPageContext.Provider
       value={{
@@ -186,7 +152,6 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
           <PopupComments
             {...restProps}
             commentSystem={commentSystem}
-            width={width}
             commentValues={commentValues}
             userDetails={userDetails}
             pageId={pageId}

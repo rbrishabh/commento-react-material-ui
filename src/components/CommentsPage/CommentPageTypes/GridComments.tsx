@@ -1,8 +1,8 @@
 import React from 'react'
-import Comment from '../Comment'
-import { AddNewCommnet } from '../CommentsPage/AddNewComment'
-import LoadingGif from '../../assets/loading.gif'
-import { CommentDetails } from '../../interfaces'
+import Comment from '../../Comment'
+import { AddNewCommnet } from '../../Helpers/AddNewComment'
+import LoadingGif from '../../../assets/loading.gif'
+import { CommentDetails } from '../../../interfaces'
 
 interface CommentPageProps {
   pageId: string
@@ -25,8 +25,8 @@ const GridComments: React.FC<CommentPageProps> = ({
   commentSystem,
   onCommentSuccess
 }) => {
-  commentValues = commentValues.reverse()
-  // console.log(userDetails)
+  const reversedCommentValues = commentValues.reverse()
+
   return (
     <div className='comments-page'>
       {/* <div className='commentHeader userdetails'>
@@ -38,7 +38,8 @@ const GridComments: React.FC<CommentPageProps> = ({
 
       {commentsLoaded ? (
         <React.Fragment>
-          {commentValues.length > 0 && allowOnlyOneRootComment ? null : (
+          {reversedCommentValues.length > 0 &&
+          allowOnlyOneRootComment ? null : (
             <AddNewCommnet
               pageType={pageType}
               pageId={pageId}
@@ -47,7 +48,7 @@ const GridComments: React.FC<CommentPageProps> = ({
             />
           )}
           <div className='commentslist-wrapper'>
-            {commentValues.map((comment: CommentDetails) => (
+            {reversedCommentValues.map((comment: CommentDetails) => (
               <Comment
                 commentSystem={commentSystem}
                 key={comment.commentHex}

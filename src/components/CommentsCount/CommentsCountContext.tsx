@@ -129,7 +129,6 @@ export const CommentsCountContextProvider: React.FC<CommentCountContextProviderP
   }, [dispatch])
 
   useEffect(() => {
-    console.log('pendingPageIds', pendingPageIds)
     let clearTimeoutRef: number
     const pendingPageIdslength = pendingPageIds.length
     if (pendingPageIdslength > 0) {

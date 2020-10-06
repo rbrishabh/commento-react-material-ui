@@ -4,8 +4,8 @@ import {
   addReplyToComment,
   CommentsPageResponse
 } from '../../utils/commentoApi'
-import { useCommentPageContext } from './CommentPageContext'
-import { CommentPageActions } from './CommentPageReducer'
+import { useCommentPageContext } from '../CommentsPage/CommentPageContext'
+import { CommentPageActions } from '../CommentsPage/CommentPageReducer'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import SendIcon from '@material-ui/icons/Send'

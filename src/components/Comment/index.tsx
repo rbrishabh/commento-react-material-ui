@@ -4,7 +4,7 @@ import { CommentActions } from './CommentActions'
 import { CommentHeader } from './UserDetails'
 import classnames from 'classnames'
 import { EditComment } from './EditComment'
-import { AddNewCommnet } from '../CommentsPage/AddNewComment'
+import { AddNewCommnet } from '../Helpers/AddNewComment'
 import { useCommentPageContext } from '../CommentsPage/CommentPageContext'
 import Divider from '@material-ui/core/Divider'
 
