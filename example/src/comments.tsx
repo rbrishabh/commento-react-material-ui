@@ -4,7 +4,8 @@ import {
   // CommentsCount
   // CommentsCountContextProvider,
   CommentCountContextConsumer,
-  CommentsCountContextProvider
+  CommentsCountContextProvider,
+  FakeCommentsPopup
 } from 'commento-react-material-ui'
 
 export default function Comments() {
@@ -19,6 +20,10 @@ export default function Comments() {
         alignItems: 'center'
       }}
     >
+      <FakeCommentsPopup
+        commentContainerProps={{ style: { filter: 'blur(7px)' } }}
+      />
+
       <CommentsCountContextProvider staleTime={60000}>
         <CommentsPage
           pageId={
