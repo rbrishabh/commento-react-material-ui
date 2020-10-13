@@ -22,7 +22,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
     paddingBottom: theme.spacing(4),
-    background: 'linear-gradient(to bottom, white 55%, rgba(0,0,0,0))',
     zIndex: 10,
     display: 'flex',
     alignItems: 'center',
