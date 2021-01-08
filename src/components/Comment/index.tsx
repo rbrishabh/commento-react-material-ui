@@ -2,6 +2,7 @@ import React, { useMemo, useState, useCallback } from 'react'
 import { CommentDetails } from '../../interfaces'
 import { CommentActions } from './CommentActions'
 import { CommentHeader } from './UserDetails'
+import CommentDate from './CommentDate'
 import classnames from 'classnames'
 import { EditComment } from './EditComment'
 import { AddNewCommnet } from '../Helpers/AddNewComment'
@@ -18,6 +19,7 @@ interface CommentProps {
   commentSystem?: string
   isReply?: boolean
   hideDivider?: boolean
+  hideDate?: boolean
   onReplySuccess?: (pageId: string, parentHex?: string) => void
 }
 
@@ -27,6 +29,7 @@ export const Comment: React.FC<CommentProps> = ({
   commentSystem,
   isReply = false,
   hideDivider = false,
+  hideDate = false,
   onReplySuccess
 }) => {
   const {
@@ -86,6 +89,7 @@ export const Comment: React.FC<CommentProps> = ({
   return (
     <div className='comment-wrapper'>
       {!hideDivider && !isReply && <Divider className='dividerMargin' />}
+      {!hideDate && <CommentDate commentData={commentDetails} />}
       <div
         className={pageType === 'popup' ? 'commentPopupBody' : 'commentBody'}
         onMouseEnter={() => setIsHovered(true)}

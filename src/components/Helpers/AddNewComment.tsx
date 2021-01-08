@@ -161,12 +161,14 @@ export const AddNewCommnet: React.FC<AddNewCommentProps> = ({
         endAdornment: (
           <InputAdornment position='end'>
             <IconButton onClick={handleSubmit}>
-              <SendIcon color='primary' />
+              <SendIcon htmlColor='#494340' />
             </IconButton>
           </InputAdornment>
         ),
         style: {
-          borderRadius: '1rem 1rem 1rem 1rem'
+          marginTop: '20px',
+          borderRadius: '0 1rem',
+          marginBottom: '20px'
         },
         disableUnderline: true,
         classes

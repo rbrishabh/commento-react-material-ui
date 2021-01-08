@@ -16,7 +16,6 @@ import {
   ListItemText,
   Button,
   ListItemIcon,
-  Theme,
   makeStyles
 } from '@material-ui/core'
 
@@ -27,9 +26,9 @@ import { useMutation, queryCache } from 'react-query'
 import produce from 'immer'
 import _ from 'lodash'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   unlikeButton: {
-    color: theme.palette.primary.main
+    color: "#494340"
   },
   likeButton: {
     color: 'grey'
@@ -76,7 +75,7 @@ const StyledMenu = withStyles({
 const StyledMenuItem = withStyles(theme => ({
   root: {
     '&:focus': {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: "#494340",
       '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
         color: theme.palette.common.white
       }

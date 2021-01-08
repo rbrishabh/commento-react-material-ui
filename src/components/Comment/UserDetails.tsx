@@ -17,9 +17,13 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
     <div className='commentHeader'>
       {commentSystem !== 'personal' ? (
         commentData.deleted || !(userData && userData.photo) ? (
-          <div className='anonymous-image'>?</div>
+          <div className='figure'>
+            <div className='anonymous-image'>?</div>
+          </div>
         ) : (
-          <img src={userData?.photo} alt='User Image' className='avatar' />
+          <div className='figure'>
+            <img src={userData?.photo} alt='User Image' className='avatar' />
+          </div>
         )
       ) : (
         ''
@@ -29,19 +33,24 @@ export const CommentHeader: React.FC<CommentHeaderProps> = ({
         {commentSystem && commentSystem === 'personal' ? (
           ''
         ) : (
-          <p className='username'>{userData.name}</p>
+          <p>
+            <span className='username'>{userData.name} </span>
+            <span className='date'>
+              {moment(commentData.creationDate).format('h.mm')}
+            </span>
+            <span className='ampm'>
+              {moment(commentData.creationDate).format('a')}
+            </span>
+          </p>
         )}
         <div className='commentStats'>
           {commentSystem && commentSystem === 'personal' ? (
             ''
           ) : (
             <span className='votes'>
-              {commentData.score} {commentData.score === 1 ? 'Like' : 'Likes'} |{' '}
+              {commentData.score} {commentData.score === 1 ? 'Like' : 'Likes'}
             </span>
           )}
-          <span className='date'>
-            {moment(commentData.creationDate).fromNow()}
-          </span>
         </div>
       </div>
     </div>

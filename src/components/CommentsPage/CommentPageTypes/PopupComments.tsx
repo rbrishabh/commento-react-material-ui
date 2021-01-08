@@ -3,12 +3,11 @@ import Comment from '../../Comment'
 import { AddNewCommnet } from '../../Helpers/AddNewComment'
 import { CommentDetails } from '../../../interfaces'
 import { animateScroll } from 'react-scroll'
-import { ArrowExpand, ArrowShrink, Cross } from './utils/Icons'
-import SettingsIcon from '@material-ui/icons/Settings'
+import { Setting ,ArrowExpand, ArrowShrink, Cross } from './utils/Icons'
 import { useCommentoAuthContext } from '../../CommentoAuthContext'
 import { useStyles } from './PopupStyles'
 import { SkeletonComment } from './utils/SkeletonComment'
-
+import moment from 'moment'
 interface CommentPageProps {
   pageId: string
   userDetails: any
@@ -64,19 +63,26 @@ const PopupComments: React.FC<CommentPageProps> = ({
       ),
     []
   )
+
+  let dateObj: any
+
   return (
     <div className={classes.root}>
       <div className={classes.popupHeader}>
         <span className='label'>{label}</span>
         <div className={classes.headerActions}>
           <span className='actionBtn' onClick={redirectToCommentoSettings}>
-            <SettingsIcon color='primary' />
+            <Setting />
           </span>
           <span
             className='actionBtn'
             onClick={isExpanded ? shrinkPopUp : expandPopUp}
           >
-            {isExpanded ? <ArrowShrink /> : <ArrowExpand />}
+            {isExpanded ? (
+              <ArrowShrink />
+            ) : (
+              <ArrowExpand />
+            )}
           </span>
           <span className='actionBtn cross' onClick={onClose}>
             <Cross />
@@ -87,16 +93,30 @@ const PopupComments: React.FC<CommentPageProps> = ({
         {commentsLoaded ? (
           <React.Fragment>
             {reversedCommentValues.map(
-              (comment: CommentDetails, index: number) => (
-                <Comment
-                  commentSystem={commentSystem}
-                  key={comment.commentHex}
-                  pageType={pageType}
-                  commentDetails={comment}
-                  hideDivider={index === 0}
-                  onReplySuccess={onCommentSuccess}
-                />
-              )
+              (comment: CommentDetails, index: number) => {
+                let hideDate = false
+
+                if (
+                  dateObj ===
+                  moment(comment.creationDate).format('dddd DD MMMM')
+                ) {
+                  hideDate = true
+                }
+
+                dateObj = moment(comment.creationDate).format('dddd DD MMMM')
+
+                return (
+                  <Comment
+                    commentSystem={commentSystem}
+                    key={comment.commentHex}
+                    pageType={pageType}
+                    commentDetails={comment}
+                    hideDivider={index === 0 || hideDate}
+                    hideDate={hideDate}
+                    onReplySuccess={onCommentSuccess}
+                  />
+                )
+              }
             )}
           </React.Fragment>
         ) : (
