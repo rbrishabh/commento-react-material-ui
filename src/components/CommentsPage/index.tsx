@@ -32,6 +32,7 @@ interface CommentPageProps {
   width?: number
   commentSystem?: string
   label?: string
+  productName?: string
   [key: string]: any
   onCommentSuccess?: (pageId: string, parentHex?: string) => void
 }
@@ -50,6 +51,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
   pageType = 'grid',
   commentSystem,
   label,
+  productName,
   onCommentSuccess,
   ...restProps
 }) => {
@@ -159,6 +161,7 @@ export const CommentsPage: React.FC<CommentPageProps> = ({
             commentsLoaded={commentsLoaded}
             pageType={pageType}
             label={label || 'Comments'}
+            productName={productName}
             onCommentSuccess={onCommentSuccess}
           />
         ) : (

@@ -14,6 +14,7 @@ interface CommentPageProps {
   commentValues: any
   commentsLoaded: any
   label: string
+  productName?: string
   allowOnlyOneRootComment?: boolean
   pageType?: string
   commentSystem?: string
@@ -39,6 +40,7 @@ const PopupComments: React.FC<CommentPageProps> = ({
   width = 300,
   expandedWidth = 1000,
   commentSystem,
+  productName,
   label,
   onClose,
   onCommentSuccess
@@ -88,6 +90,9 @@ const PopupComments: React.FC<CommentPageProps> = ({
             <Cross />
           </span>
         </div>
+      </div>
+      <div className={classes.popupSubHeader}>
+        <span className='subHeading'>{productName}</span>
       </div>
       <div id='scrollToRoot' className={classes.commentsContainer}>
         {commentsLoaded ? (

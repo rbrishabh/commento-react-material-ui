@@ -17,7 +17,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
   popupHeader: {
     width: '100%',
     padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-    paddingBottom: theme.spacing(4),
     display: 'flex',
     alignItems: 'center',
     '& .label': {
@@ -31,12 +30,19 @@ export const useStyles = makeStyles((theme: Theme) => ({
       fontWeight: '600',
       lineHeight: '38px',
       wordSpacing: '0px',
-      fontSize: '2.5rem',
+      fontSize: '1.5rem',
       paddingBottom: '1px',
       marginTop: '35px',
       marginBottom: '10px',
       flex: 1
     }
+  },
+  popupSubHeader: {
+    fontSize: '20px',
+    padding: '8px 16px',
+    fontWeight: 700,
+    color: 'black',
+    paddingBottom: theme.spacing(4),
   },
   headerActions: {
     display: 'flex',
